@@ -1,7 +1,16 @@
 "use client"
 import { useState, useEffect } from "react"
+import TextareaAutosize from "react-textarea-autosize"
 
 export default function JournalPage() {
+    const today = new Date()
+    const options = {
+        weekday: "long",
+        year: "numeric",
+        month:"long",
+        day: "numeric"
+    }
+    const formatted = today.toLocaleDateString("en-US", options)
     const [entries, setEntries] = useState([])
 
     //fetch entries when page loads
@@ -54,23 +63,34 @@ export default function JournalPage() {
 
     //render form + list
     return (
-        <div>
-            <h1> My Journal</h1>
-
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                <textarea
-                    placeholder="write down your thoughts..."
-                    value={body}
-                    onChange={(e) => setBody(e.target.value)}
-                />
-                <button type="submit">Save Entry</button>
-            </form>
+        <div className="m-3">
+            <h1 className="mb-4 font-medium text-stone-700">Good morning, Karen</h1>
+            <div className="border border-[#D9D9D9] rounded-xl p-4 mb-8 shadow-sm">
+                <h2 className="pb-3 text-stone-600">Today · {formatted}</h2>
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        placeholder="New Entry"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="w-full text-3xl focus:outline-none pb-3"
+                    />
+                    <TextareaAutosize
+                        minRows={2}
+                        maxRows={15}
+                        placeholder="What's been on your mind?"
+                        value={body}
+                        onChange={(e) => setBody(e.target.value)}
+                        className="w-full focus:outline-none resize-none overflow-y-auto leading-relaxed text-gray-700"
+                        style = {{ lineHeight: "1.6" }}
+                    />
+                    <button 
+                        type="submit" 
+                        className="self-end bg-[#F5F5F5] hover:bg-[#E9E9E9] text-sm text-[#444444] p-1 px-3 rounded-xl border border-[#D9D9D9]">
+                        Save
+                    </button>
+                </form>
+            </div>
 
             {entries.length === 0 ? (
                 <p>No entries yet.</p>
