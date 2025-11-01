@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import TextareaAutosize from "react-textarea-autosize"
+import { ArrowUpRight } from "lucide-react"
 
 export default function JournalPage() {
     const today = new Date()
@@ -64,9 +65,9 @@ export default function JournalPage() {
     //render form + list
     return (
         <div className="m-3">
-            <h1 className="mb-4 font-medium text-stone-700">Good morning, Karen</h1>
+            <h1 className="mb-4 font-medium text-neutral-700">Good morning, Karen</h1>
             <div className="border border-[#D9D9D9] rounded-xl p-4 mb-8 shadow-sm">
-                <h2 className="pb-3 text-stone-600">Today · {formatted}</h2>
+                <h2 className="pb-3 text-neutral-600">Today · {formatted}</h2>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
@@ -81,7 +82,7 @@ export default function JournalPage() {
                         placeholder="What's been on your mind?"
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
-                        className="w-full focus:outline-none resize-none overflow-y-auto leading-relaxed text-gray-700"
+                        className="w-full focus:outline-none resize-none overflow-y-auto leading-relaxed text-neutral-700"
                         style = {{ lineHeight: "1.6" }}
                     />
                     <button 
@@ -98,12 +99,14 @@ export default function JournalPage() {
                 <ul>
                     {entries.map((entry) => (
                         <li key={entry.id}>
-                            <h2 className="p-2 my-2 border border-[#D9D9D9] rounded-xl shadow-sm">{new Date(entry.createdAt).toLocaleDateString("en-US", {
+                            <h2 className="py-2 px-4 my-2 border border-[#D9D9D9] rounded-xl shadow-sm flex justify-between">{new Date(entry.createdAt).toLocaleDateString("en-US", {
                                 month: "short",
                                 day: "2-digit",
                             })}
                             {" - "}
-                            {entry.title}</h2>
+                            {entry.title}
+                                <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-600" />
+                            </h2>
                         </li>
                     ))}
                 </ul>
