@@ -98,8 +98,12 @@ export default function JournalPage() {
                 <ul>
                     {entries.map((entry) => (
                         <li key={entry.id}>
-                            <h2>{entry.title}</h2>
-                            <p>{entry.body}</p>
+                            <h2 className="p-2 my-2 border border-[#D9D9D9] rounded-xl shadow-sm">{new Date(entry.createdAt).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "2-digit",
+                            })}
+                            {" - "}
+                            {entry.title}</h2>
                         </li>
                     ))}
                 </ul>
