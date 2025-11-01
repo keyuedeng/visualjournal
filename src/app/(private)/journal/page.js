@@ -2,6 +2,14 @@
 import { useState, useEffect } from "react"
 import TextareaAutosize from "react-textarea-autosize"
 import { ArrowUpRight } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 export default function JournalPage() {
     const today = new Date()
@@ -62,10 +70,21 @@ export default function JournalPage() {
         }
     }
 
+    const hour = today.getHours();
+    let greeting;
+    if (hour >= 0 && hour <= 11) {
+        greeting = "Good morning, "
+    } else if (hour > 11 && hour < 17) {
+        greeting = "Good afternoon, "
+    } else {
+        greeting = "Good evening, "
+    }
+
+
     //render form + list
     return (
         <div className="m-3">
-            <h1 className="mb-4 font-medium text-neutral-700">Good morning, Karen</h1>
+            <h1 className="mb-4 font-medium text-neutral-700">{greeting}</h1>
             <div className="border border-[#D9D9D9] rounded-xl p-4 mb-8 shadow-sm">
                 <h2 className="pb-3 text-neutral-600">Today · {formatted}</h2>
                 <form onSubmit={handleSubmit}>
@@ -92,21 +111,40 @@ export default function JournalPage() {
                     </button>
                 </form>
             </div>
-
             {entries.length === 0 ? (
                 <p>No entries yet.</p>
             ) : (
                 <ul>
                     {entries.map((entry) => (
                         <li key={entry.id}>
-                            <h2 className="py-2 px-4 my-2 border border-[#D9D9D9] rounded-xl shadow-sm flex justify-between">{new Date(entry.createdAt).toLocaleDateString("en-US", {
-                                month: "short",
-                                day: "2-digit",
-                            })}
-                            {" - "}
-                            {entry.title}
-                                <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:text-neutral-600" />
-                            </h2>
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <button className="w-full flex justify-between items-center rounded-lg border border-neutral-200 px-4 py-2 my-2 shadow-sm hover:bg-neutral-100 transition">
+                                        <div className="flex items-center gap-1 text-neutral-700">
+                                            <span>
+                                                {new Date(entry.createdAt).toLocaleDateString("en-US", {
+                                                    month: "short",
+                                                    day: "2-digit",
+                                                })}
+                                            </span>
+                                            <span>-</span>
+                                            <span>{entry.title}</span>
+                                        </div>
+                                        <ArrowUpRight className="w-4 h-4 text-neutral-400" />
+                                    </button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>{entry.title}</DialogTitle>
+                                        <DialogDescription>
+                                            {new Date(entry.createdAt).toLocaleString()}
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div>
+                                        {entry.body}
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
                         </li>
                     ))}
                 </ul>
