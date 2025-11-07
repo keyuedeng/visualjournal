@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import TextareaAutosize from "react-textarea-autosize"
 import { ArrowUpRight } from "lucide-react"
 import {
@@ -70,6 +70,10 @@ export default function JournalPage() {
         }
     }
 
+    //handle input
+    const bodyInputRef = useRef(null)
+    const titleInputRef = useRef(null)
+
     const hour = today.getHours();
     let greeting;
     if (hour >= 0 && hour <= 11) {
@@ -79,7 +83,6 @@ export default function JournalPage() {
     } else {
         greeting = "Good evening, "
     }
-
 
     //render form + list
     return (
@@ -93,14 +96,28 @@ export default function JournalPage() {
                         placeholder="New Entry"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault()
+                                bodyInputRef.current?.focus()
+                            }
+                        }}
+                        ref={titleInputRef}
                         className="w-full text-3xl focus:outline-none pb-3"
                     />
                     <TextareaAutosize
                         minRows={2}
                         maxRows={15}
                         placeholder="What's been on your mind?"
+                        ref={bodyInputRef}
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Backspace" && e.target.value === "") {
+                                e.preventDefault()
+                                titleInputRef.current?.focus()
+                            }
+                        }}
                         className="w-full focus:outline-none resize-none overflow-y-auto leading-relaxed text-neutral-700"
                         style = {{ lineHeight: "1.6" }}
                     />
@@ -145,7 +162,7 @@ export default function JournalPage() {
                                             {new Date(entry.createdAt).toLocaleString()}
                                         </DialogDescription>
                                     </DialogHeader>
-                                    <div>
+                                    <div className = "whitespace-pre">
                                         {entry.body}
                                     </div>
                                 </DialogContent>
