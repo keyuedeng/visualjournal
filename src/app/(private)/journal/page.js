@@ -150,19 +150,23 @@ export default function JournalPage() {
                                                 })}
                                             </span>
                                             <span>-</span>
-                                            <span>{entry.title}</span>
+                                            {entry.title === "" ? (
+                                                <span className="text-neutral-500">{entry.body.split(' ').slice(0,7).join(' ')}{"..."}</span>
+                                            ) : (
+                                                <span>{entry.title}</span>
+                                            )}
                                         </div>
                                         <ArrowUpRight className="w-4 h-4 text-neutral-400" />
                                     </button>
                                 </DialogTrigger>
-                                <DialogContent>
+                                <DialogContent className="!max-w-2xl !h-[80vh]">
                                     <DialogHeader>
                                         <DialogTitle>{entry.title}</DialogTitle>
                                         <DialogDescription>
                                             {new Date(entry.createdAt).toLocaleString()}
                                         </DialogDescription>
                                     </DialogHeader>
-                                    <div className = "whitespace-pre">
+                                    <div className = "whitespace-pre-wrap">
                                         {entry.body}
                                     </div>
                                 </DialogContent>
