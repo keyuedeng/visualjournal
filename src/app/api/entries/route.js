@@ -3,12 +3,21 @@ import { prisma } from '@/lib/prisma' // so we can use it in our code
 export async function POST(request) {
     try {
         const data = await request.json() //await used in async function to pause the execution of the function until a promise settles
+        
+        const title = data.title
+        const body = data.body?.trim()
+
+        if (!body) {
+            return Response.json(
+                { error: "Body cannot be empty" },
+                { status: 400 }
+            )
+        }
+
         const savedEntry = await prisma.entry.create({
-            data: {
-                title: data.title,
-                body: data.body,
-            },
+            data: { title, body },
         })
+
         return Response.json({ message: "Entry created successfully", entry: savedEntry }) 
     } catch (error) {
         console.error("Failed to save entry:", error)

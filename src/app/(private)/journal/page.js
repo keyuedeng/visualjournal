@@ -106,7 +106,12 @@ export default function JournalPage() {
                     />
                     <button 
                         type="submit" 
-                        className="self-end bg-[#F5F5F5] hover:bg-[#E9E9E9] text-sm text-[#444444] p-1 px-3 rounded-xl border border-[#D9D9D9]">
+                        disabled={!body.trim()}
+                        className={`${
+                            !body.trim()
+                            ? "bg-neutral-50"
+                            : "bg-neutral-100 hover:bg-neutral-200 cursor-pointer"
+                        } self-end text-sm text-[#444444] p-1 px-3 rounded-xl border border-neutral-300`}>
                         Save
                     </button>
                 </form>
@@ -119,7 +124,7 @@ export default function JournalPage() {
                         <li key={entry.id}>
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <button className="w-full flex justify-between items-center rounded-lg border border-neutral-200 px-4 py-2 my-2 shadow-sm hover:bg-neutral-100 transition">
+                                    <button className="w-full flex justify-between items-center border-t border-neutral-200 px-4 py-2 hover:bg-neutral-100 transition">
                                         <div className="flex items-center gap-1 text-neutral-700">
                                             <span>
                                                 {new Date(entry.createdAt).toLocaleDateString("en-US", {
