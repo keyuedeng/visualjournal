@@ -48,6 +48,21 @@ export default function JournalPage() {
             if (!postRes.ok) {
                 console.error('Failed to save entry', await postRes.text())
             }
+            
+            // get saved entry details
+            const postData = await postRes.json()
+            const savedEntry = postData.entry
+
+            // call analyser
+            await fetch("/api/analyse", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    entryId: savedEntry.id,
+                    text: savedEntry.body,
+                }),
+            })
+
         } catch (err) {
             console.error('Error saving entry', err)
         }
@@ -126,9 +141,9 @@ export default function JournalPage() {
                         disabled={!body.trim()}
                         className={`${
                             !body.trim()
-                            ? "bg-neutral-50"
-                            : "bg-neutral-100 hover:bg-neutral-200 cursor-pointer"
-                        } self-end text-sm text-[#444444] p-1 px-3 rounded-xl border border-neutral-300`}>
+                            ? "bg-neutral-50 text-neutral-300"
+                            : "bg-neutral-100 hover:bg-neutral-200 cursor-pointer text-neutral-600"
+                        } self-end text-sm p-1 px-3 rounded-xl border border-neutral-300`}>
                         Save
                     </button>
                 </form>
@@ -159,16 +174,16 @@ export default function JournalPage() {
                                         <ArrowUpRight className="w-4 h-4 text-neutral-400" />
                                     </button>
                                 </DialogTrigger>
-                                <DialogContent className="!max-w-2xl !h-[80vh]">
-                                    <DialogHeader>
+                                <DialogContent className="!max-w-2xl !h-[85vh] overflow-y-auto">
+                                    <DialogHeader className="p-4">
                                         <DialogTitle>{entry.title}</DialogTitle>
                                         <DialogDescription>
                                             {new Date(entry.createdAt).toLocaleString()}
                                         </DialogDescription>
+                                        <div className = "whitespace-pre-wrap">
+                                            {entry.body}
+                                        </div>
                                     </DialogHeader>
-                                    <div className = "whitespace-pre-wrap">
-                                        {entry.body}
-                                    </div>
                                 </DialogContent>
                             </Dialog>
                         </li>
