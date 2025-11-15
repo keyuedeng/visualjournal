@@ -1,4 +1,9 @@
 import { prisma } from '@/lib/prisma'
+import OpenAI from "openai"
+
+const client = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+})
 
 export async function POST(request) {
     try {
@@ -11,24 +16,39 @@ export async function POST(request) {
             )
         }
 
-        const mockAnalysis = {
-            topics: ["creativity","reflection","mood"],
-            sentiment: 0.3,
-            emotions: ["tired", "hopeful"],
-        }
+        const result = await client.chat.completions.create({
+            model: "gpt-4o-mini",
+            response_format: { type: "json_object" },
+            messages: [
+                {
+                    role: "user",
+                    content: `Analyze the journal entry and return:
+                    - "topics": array of main themes
+                    - "sentiment": number between -1 and 1
+                    - "emotions": array of emotion words
+                    
+                    Respond ONLY in JSON.
+                    
+                    Text: "${text}"
+                    `,
+                },
+            ],
+        })
 
-        const savedInsight = await prisma.insight.create({
+        const analysis = JSON.parse(result.choices[0].message.content)
+
+        const saved = await prisma.insight.create({
             data: {
                 entryId,
-                topics: mockAnalysis.topics,
-                sentiment: mockAnalysis.sentiment,
-                emotions: mockAnalysis.emotions,
-            }
+                topics: analysis.topics || [],
+                sentiment: analysis.sentiment || 0,
+                emotions: analysis.emotions || [],
+            },
         })
 
         return Response.json({
             message: "Analysis succesful",
-            analysis: mockAnalysis,
+            insight: saved,
         })
     } catch (error) {
         console.error("Analysis failed: ", error)

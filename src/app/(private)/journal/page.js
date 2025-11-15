@@ -48,6 +48,11 @@ export default function JournalPage() {
             if (!postRes.ok) {
                 console.error('Failed to save entry', await postRes.text())
             }
+
+            //clear input
+            setTitle("")
+            setBody("")
+
             
             // get saved entry details
             const postData = await postRes.json()
@@ -66,10 +71,6 @@ export default function JournalPage() {
         } catch (err) {
             console.error('Error saving entry', err)
         }
-
-        //clear input
-        setTitle("")
-        setBody("")
 
         //reload entries
         try {
