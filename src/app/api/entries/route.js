@@ -15,7 +15,11 @@ export async function POST(request) {
         }
 
         const savedEntry = await prisma.entry.create({
-            data: { title, body },
+            data: { 
+                title, 
+                body,
+                userId: "demo-user",
+            },
         })
 
         return Response.json({ message: "Entry created successfully", entry: savedEntry }) 
