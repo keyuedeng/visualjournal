@@ -1,9 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import OpenAI from "openai"
-
-const client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-})
+import { openai } from "@/lib/openai"
 
 export async function POST(request) {
     try {
@@ -16,7 +12,7 @@ export async function POST(request) {
             )
         }
 
-        const result = await client.chat.completions.create({
+        const result = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             response_format: { type: "json_object" },
             messages: [
