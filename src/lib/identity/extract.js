@@ -1,8 +1,17 @@
 import { openai } from "@/lib/openai"
 
- export async function extractIdentity(agg, candidates) {
+export async function extractIdentity({
+    topTopics, 
+    excerpts: filteredExcerpts, 
+    emotionStats: filteredEmotionStats, 
+    cooccurrence: topCooccurrence
+}, candidates) {
     const prompt = `
     You are analysing a user's journal history. 
+
+    DO NOT return code fences.
+    DO NOT use \`\`\`json.
+    Return ONLY raw JSON with no extra text.
 
     You get:
     - topic frequencies
@@ -32,10 +41,11 @@ import { openai } from "@/lib/openai"
     `
 
     const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         messages: [
             { role: "system", content: prompt },
-            { role: "user", content: JSON.stringify({ agg, candidates })}
+            { role: "user", content: JSON.stringify({ topTopics, filteredExcerpts, filteredEmotionStats, topCooccurrence, candidates }
+    )}
         ],
         temperature: 0.2
     })

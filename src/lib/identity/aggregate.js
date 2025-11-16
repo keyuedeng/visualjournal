@@ -21,9 +21,11 @@ export async function aggregateInsights(userId) {
         for (const t of topics) {
             topicCounts[t] = (topicCounts[t] || 0) + 1
 
-            excerpts[t] ||= []
-            excerpts[t].push(entry.body.slice(0,500)) //rough snippet
-
+            if (!excerpts[t]) excerpts[t] = []
+            if (excerpts[t].length < 3) {
+                excerpts[t].push(entry.body.slice(0,200)) //rough snippet
+            }
+            
             emotionStats[t] ||= { sentiments: [], emotions: [] }
             emotionStats[t].sentiments.push(insight.sentiment)
             emotionStats[t].emotions.push(...insight.emotions)
@@ -40,6 +42,30 @@ export async function aggregateInsights(userId) {
             }
         }
     }
+    // top 10 strongest objects
+    const topTopics = Object.entries(topicCounts)
+        .sort((a,b) => b[1] - a[1])
+        .slice(0,15)
+        .map(([topic]) => topic)
+    //filter excerpts + emotionStats to include only top topics
+    const filteredExcerpts = {}
+    const filteredEmotionStats = {}
 
-    return { topicCounts, cooccurrence, emotionStats, excerpts }
+    for (const t of topTopics) {
+        filteredExcerpts[t] = excerpts[t] || []
+        filteredEmotionStats[t] = emotionStats[t] || { sentiments: [], emotions: [] }
+    }
+
+    // also limit cooccurrence
+    const allPairs = []
+    for (const a in cooccurrence) {
+        for (const b in cooccurrence[a]) {
+            allPairs.push({ a,b,weight: cooccurrence[a][b] })
+        }
+    }
+    const topCooccurrence = allPairs
+        .sort((a,b) => b.weight - a.weight)
+        .slice(0,15)
+
+    return { topTopics, excerpts: filteredExcerpts, emotionStats: filteredEmotionStats, cooccurrence: topCooccurrence }
 }

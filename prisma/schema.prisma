@@ -28,3 +28,26 @@ model Insight {
 
   entry Entry @relation(fields: [entryId], references: [id])
 }
+
+model IdentityNode {
+  id String @id @default(cuid())
+  userId String
+  label String
+  category String
+  strength Float
+  ring Int? 
+
+  outgoing IdentityEdge[] @relation("NodeOutgoing")
+  incoming IdentityEdge[] @relation("NodeIncoming")
+}
+
+model IdentityEdge {
+  id String @id
+  userId String
+  sourceId String
+  targetId String
+  weight Float
+  
+  source IdentityNode @relation("NodeOutgoing", fields: [sourceId], references: [id])
+  target IdentityNode @relation("NodeIncoming", fields: [targetId], references: [id])
+}
