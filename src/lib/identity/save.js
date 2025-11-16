@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { assignRing } from "./ring"
 
 export async function saveIdentityGraph(userId, nodes, edges) {
     //wipe old graph
@@ -14,7 +15,7 @@ export async function saveIdentityGraph(userId, nodes, edges) {
                 label: n.label,
                 category: n.category,
                 strength: n.strength,
-                ring: null, //COMPUTE THIS LATER
+                ring: assignRing(n.category), //COMPUTE THIS LATER
             }
         })
     }
