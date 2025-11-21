@@ -1,7 +1,10 @@
-"use client"
+import IdentityMap from "@/components/IdentityMap"
 
 export default function MapPage() {
     return (
-        <h1>this is my map page</h1>
+        <div className="p-6">
+            <h1>Identity Map</h1>
+            <IdentityMap/>
+        </div>
     )
 }
