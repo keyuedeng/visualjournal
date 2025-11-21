@@ -3,41 +3,83 @@ import { openai } from "@/lib/openai"
 export async function extractIdentity(scoredTopics) {
     const prompt = `
     You are an identity analyst. You receive a list of topics extracted from a user's journals.
-    Each topic contains identity-relevant scores:
+    Each topic has calculated identity scores:
 
-    - frequencyScore          → how often it appears
-    - emotionalIntensityScore → how emotional it is
-    - contextVarianceScore    → appears across different emotional states
-    - stabilityScore          → appears across many weeks or months
-    - identityScore           → combined relevance
+    - frequencyScore
+    - emotionalIntensityScore
+    - contextVarianceScore
+    - stabilityScore
+    - identityScore
 
     Your task is to infer the user's PERSONAL IDENTITY MODEL.
 
-    ## CLASSIFICATION RULES
+    ──────────────────────────────────────────
+    ## IDENTITY LAYER CLASSIFICATION
+    ──────────────────────────────────────────
 
     ### CORE VALUES (ring 0)
-    Only include if:
-    - emotionally significant
-    - stable across time
-    - tied to self-beliefs or motivations
-    Examples: personal growth, emotional awareness, compassion, ambition.
+    Emotionally important, stable, motivation-anchoring.
 
     ### PERSONALITY TRAITS / MOTIVATIONS (ring 1)
-    Examples: reflective, driven, anxious, disciplined, curious.
+    Stable tendencies: reflective, driven, anxious, curious.
 
     ### LIFE THEMES (ring 2)
-    Long-term themes: work, relationships, health, study, balance.
+    Long-term contexts: work, relationships, health, study, growth.
 
     ### INTERESTS (ring 3)
-    Hobbies, routines, recurring preferences.
+    Hobbies, preferences, recurring routines.
 
     ### EMOTIONAL PATTERNS (ring 4)
-    Patterns of feeling: stress, confidence, burnout, calmness, anxiety.
+    Anxiety, calmness, stress, joy, burnout, frustration.
 
     ### TRANSIENT TOPICS (ring 5)
-    Short-term or low-identity elements.
+    Short-lived, low-identity relevance.
 
-    ### OUTPUT FORMAT
+    ──────────────────────────────────────────
+    ## GRAPH STRUCTURE RULES (IMPORTANT)
+    ──────────────────────────────────────────
+
+    ### Avoid:
+    - linear chains (A → B → C → D)
+    - loops or cycles
+    - purely narrative ordering of nodes
+    - multiple disconnected graph components
+    - islands that cannot reach the core identity
+
+    ### ✔ Aim for:
+    - **one unified identity graph**
+    - with meaningful, semantic structure
+    - NOT forced, but gently guided
+
+    ### ✔ Structure shape:
+    - rings 0-1 → dense, central hub
+    - ring 2 → connects inward to core/traits
+    - ring 3 → connects inward to themes/traits
+    - ring 4 → connects inward to core/traits/themes
+    - ring 5 → attach to the closest identity parent
+
+    ### ✔ Edge logic:
+    Edges represent:
+    - semantic similarity
+    - emotional connection
+    - psychological meaning
+    - identityScore closeness
+    - co-occurrence across contexts
+
+    ### ✔ Connectivity rule (soft constraint):
+    Every node should have AT LEAST ONE **meaningful inward connection**
+    BUT avoid chains.  
+    Prefer a **hub + spokes + cross-links** structure.
+
+    ### ✔ Edge preference priority:
+    1. connect nodes to their inner-ring parent(s)
+    2. connect nodes to semantically similar neighbors
+    3. add optional cross-links only when conceptually strong
+
+    ──────────────────────────────────────────
+    ## OUTPUT FORMAT
+    ──────────────────────────────────────────
+
     Return STRICT JSON:
 
     {
@@ -54,10 +96,6 @@ export async function extractIdentity(scoredTopics) {
         { "source": "string", "target": "string", "weight": 0.0 }
     ]
     }
-
-    Strength 0-1 = importance based on identityScore (scale proportionally).
-    Create semantic/emotional/identity-based edges.
-    Ensure all nodes connect to at least one other node.
     `
     const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",

@@ -39,6 +39,8 @@ model IdentityNode {
 
   outgoing IdentityEdge[] @relation("NodeOutgoing")
   incoming IdentityEdge[] @relation("NodeIncoming")
+
+  insights IdentityNodeInsight[]
 }
 
 model IdentityEdge {
@@ -50,4 +52,19 @@ model IdentityEdge {
   
   source IdentityNode @relation("NodeOutgoing", fields: [sourceId], references: [id])
   target IdentityNode @relation("NodeIncoming", fields: [targetId], references: [id])
+}
+
+model IdentityNodeInsight {
+  id String @id @default(cuid())
+  userId String
+  nodeId String
+  summary String?
+  notes String?
+  excerpts String[]
+  updatedAt DateTime @updatedAt
+
+  node IdentityNode @relation(fields: [nodeId], references: [id])
+
+  @@index([userId])
+  @@index([nodeId])
 }
