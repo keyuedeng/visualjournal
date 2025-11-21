@@ -1,54 +1,75 @@
 import { openai } from "@/lib/openai"
 
-export async function extractIdentity({
-    topTopics, 
-    excerpts: filteredExcerpts, 
-    emotionStats: filteredEmotionStats, 
-    cooccurrence: topCooccurrence
-}, candidates) {
+export async function extractIdentity(scoredTopics) {
     const prompt = `
-    You are analysing a user's journal history. 
+    You are an identity analyst. You receive a list of topics extracted from a user's journals.
+    Each topic contains identity-relevant scores:
 
-    DO NOT return code fences.
-    DO NOT use \`\`\`json.
-    Return ONLY raw JSON with no extra text.
+    - frequencyScore          → how often it appears
+    - emotionalIntensityScore → how emotional it is
+    - contextVarianceScore    → appears across different emotional states
+    - stabilityScore          → appears across many weeks or months
+    - identityScore           → combined relevance
 
-    You get:
-    - topic frequencies
-    - co-occurrences
-    - emotional patterns
-    - representative excerpts
-    - simple category guesses (candidates)
+    Your task is to infer the user's PERSONAL IDENTITY MODEL.
 
-    Your job: 
-    - refine the candidates
-    - merge similar topics
-    - identify stable identity elements
-    - categorise them: "core_value", "trait", "theme", "interest", "entity","emotion_pattern"
-    - assign each a strength 0-1
-    - build relationships based on co-occurrence + meaning
+    ## CLASSIFICATION RULES
 
-    Output strictly in this JSON format:
+    ### CORE VALUES (ring 0)
+    Only include if:
+    - emotionally significant
+    - stable across time
+    - tied to self-beliefs or motivations
+    Examples: personal growth, emotional awareness, compassion, ambition.
+
+    ### PERSONALITY TRAITS / MOTIVATIONS (ring 1)
+    Examples: reflective, driven, anxious, disciplined, curious.
+
+    ### LIFE THEMES (ring 2)
+    Long-term themes: work, relationships, health, study, balance.
+
+    ### INTERESTS (ring 3)
+    Hobbies, routines, recurring preferences.
+
+    ### EMOTIONAL PATTERNS (ring 4)
+    Patterns of feeling: stress, confidence, burnout, calmness, anxiety.
+
+    ### TRANSIENT TOPICS (ring 5)
+    Short-term or low-identity elements.
+
+    ### OUTPUT FORMAT
+    Return STRICT JSON:
 
     {
-        "nodes": [
-            { "id": "string", "label": "string", "category": "string", "strength": 0.0 }
-        ],
-        "edges": [
-            { "source": "string", "target": "string", "weight": 0.0 }
-        ]
+    "nodes": [
+        {
+        "id": "string",
+        "label": "string",
+        "category": "core_value | personality_trait | motivation | life_theme | interest | emotional_pattern | external_entity | transient_topic",
+        "strength": 0.0,
+        "ring": 0
+        }
+    ],
+    "edges": [
+        { "source": "string", "target": "string", "weight": 0.0 }
+    ]
     }
-    `
 
+    Strength 0-1 = importance based on identityScore (scale proportionally).
+    Create semantic/emotional/identity-based edges.
+    Ensure all nodes connect to at least one other node.
+    `
     const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
+        temperature: 0.2,
         messages: [
-            { role: "system", content: prompt },
-            { role: "user", content: JSON.stringify({ topTopics, filteredExcerpts, filteredEmotionStats, topCooccurrence, candidates }
-    )}
+            { role: "system", content: prompt},
+            { role: "user", content: JSON.stringify(scoredTopics) }
         ],
-        temperature: 0.2
     })
 
-    return JSON.parse(response.choices[0].message.content)
+    let text = response.choices[0].message.content
+    text = text.replace(/```json/g, "").replace(/```/g, "").trim()
+
+    return JSON.parse(text)
 }

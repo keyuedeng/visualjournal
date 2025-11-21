@@ -12,5 +12,12 @@ export async function GET() {
         where: { userId }
     })
 
-    return NextResponse.json({ nodes, edges })
+    return NextResponse.json({
+        nodes,
+        links: edges.map(e => ({
+            source: e.sourceId,
+            target: e.targetId, 
+            weight: e.weight,
+        }))
+    })
 }

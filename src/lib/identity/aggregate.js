@@ -3,69 +3,91 @@ import { prisma } from "@/lib/prisma"
 export async function aggregateInsights(userId) {
     const entries = await prisma.entry.findMany({
         where: { userId },
-        include: { insight: true }
+        include: { insight: true }, 
+        orderBy: { createdAt: "asc" },
     })
 
-    const topicCounts = {}
-    const cooccurrence = {}
-    const excerpts = {}
-    const emotionStats = {}
-
+    const topicStats = {}
+    let firstDate = null
+    let lastDate = null
+    
     for (const entry of entries) {
         const insight = entry.insight
         if (!insight) continue
-        
+
         const topics = insight.topics || []
+        const sentiment = insight.sentiment ?? 0
+        const emotions = insight.emotions || []
 
-        //count topics
+        const createdAt = entry.createdAt
+        const dayKey = createdAt.toISOString().slice(0, 10)  // YYYY-MM-DD
+        const monthKey = createdAt.toISOString().slice(0, 7) // YYYY-MM
+
+        if (!firstDate) firstDate = createdAt
+        lastDate = createdAt
+
+        //classify sentiment context
+        let sentimentBucket = "neutral"
+        if (sentiment > 0.2) sentimentBucket = "positive"
+        else if (sentiment < -0.2) sentimentBucket = "negative"
+
         for (const t of topics) {
-            topicCounts[t] = (topicCounts[t] || 0) + 1
-
-            if (!excerpts[t]) excerpts[t] = []
-            if (excerpts[t].length < 3) {
-                excerpts[t].push(entry.body.slice(0,200)) //rough snippet
+            if (!topicStats[t]) {
+                topicStats[t] = {
+                    topic: t,
+                    entryCount: 0,
+                    entryIds: new Set(),
+                    sentiments: [],
+                    absSentimentSum: 0,
+                    sentimentBuckets: { positive: 0, neutral: 0, negative: 0 },
+                    emotionCounts: {},          // emotion -> count
+                    dayKeys: new Set(),         // distinct days
+                    monthKeys: new Set(),       // distinct months
+                    excerpts: [],               // up to 2 short snippets
+                }
             }
-            
-            emotionStats[t] ||= { sentiments: [], emotions: [] }
-            emotionStats[t].sentiments.push(insight.sentiment)
-            emotionStats[t].emotions.push(...insight.emotions)
-        }
 
-        // co-occurrence
-        for (let i=0; i<topics.length; i++) {
-            for (let j=i+1; j<topics.length; j++) {
-                const a = topics[i], b = topics[j]
-                cooccurrence[a] ||= {}
-                cooccurrence[b] ||= {}
-                cooccurrence[a][b] = (cooccurrence[a][b] || 0) + 1
-                cooccurrence[b][a] = (cooccurrence[b][a] || 0) + 1
+            const stats = topicStats[t]
+
+            stats.entryCount += 1
+            stats.entryIds.add(entry.id)
+
+            stats.sentiments.push(sentiment)
+            stats.absSentimentSum += Math.abs(sentiment)
+            stats.sentimentBuckets[sentimentBucket] += 1
+
+            for (const emo of emotions) {
+                stats.emotionCounts[emo] = (stats.emotionCounts[emo] || 0) + 1
+            }
+
+            stats.dayKeys.add(dayKey)
+            stats.monthKeys.add(monthKey)
+
+            if (stats.excerpts.length < 2) {
+                stats.excerpts.push(entry.body.slice(0, 200))
             }
         }
     }
-    // top 10 strongest objects
-    const topTopics = Object.entries(topicCounts)
-        .sort((a,b) => b[1] - a[1])
-        .slice(0,15)
-        .map(([topic]) => topic)
-    //filter excerpts + emotionStats to include only top topics
-    const filteredExcerpts = {}
-    const filteredEmotionStats = {}
+    // convert sets to arrays so json safe
+    const topics = Object.values(topicStats).map((s) => ({
+        topic: s.topic,
+        entryCount: s.entryCount,
+        entryIds: Array.from(s.entryIds),
+        sentiments: s.sentiments,
+        absSentimentSum: s.absSentimentSum,
+        sentimentBuckets: s.sentimentBuckets,
+        emotionCounts: s.emotionCounts,
+        distinctDays: s.dayKeys.size,
+        distinctMonths: s.monthKeys.size,
+        excerpts: s.excerpts,
+    }))
 
-    for (const t of topTopics) {
-        filteredExcerpts[t] = excerpts[t] || []
-        filteredEmotionStats[t] = emotionStats[t] || { sentiments: [], emotions: [] }
+    return {
+        topics,
+        meta: {
+        totalEntries: entries.length,
+        firstDate,
+        lastDate,
+        },
     }
-
-    // also limit cooccurrence
-    const allPairs = []
-    for (const a in cooccurrence) {
-        for (const b in cooccurrence[a]) {
-            allPairs.push({ a,b,weight: cooccurrence[a][b] })
-        }
-    }
-    const topCooccurrence = allPairs
-        .sort((a,b) => b.weight - a.weight)
-        .slice(0,15)
-
-    return { topTopics, excerpts: filteredExcerpts, emotionStats: filteredEmotionStats, cooccurrence: topCooccurrence }
 }

@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server"
 import { aggregateInsights } from "@/lib/identity/aggregate"
-import { generateCandidates } from "@/lib/identity/candidates"
+import { scoreTopics } from "@/lib/identity/score"
 import { extractIdentity } from "@/lib/identity/extract"
+import { normaliseIdentityOutput } from "@/lib/identity/normalise"
 import { saveIdentityGraph } from "@/lib/identity/save"
 
 export async function GET() {
     const userId = "demo-user"
     const agg = await aggregateInsights("demo-user")
-    const candidates = generateCandidates(agg)
-    const result = await extractIdentity(agg, candidates)
+    const scored = scoreTopics(agg.topics, agg.meta)
+    const identity = await extractIdentity(scored)
+    
+    const { nodes, edges} = normaliseIdentityOutput(identity.nodes, identity.edges)
 
-    await saveIdentityGraph(userId, result.nodes, result.edges)
+    await saveIdentityGraph(userId, nodes, edges)
 
-    return NextResponse.json({ status: "ok", nodes: result.nodes.length })
+    return NextResponse.json({ status: "ok", nodes: nodes.length })
 }

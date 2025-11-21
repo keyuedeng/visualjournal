@@ -23,9 +23,9 @@ export default function IdentityMap() {
                     strength: n.strength, 
                     ring: n.ring
                 })), 
-                links: data.edges.map( e => ({
-                    source: e.sourceId.trim(), 
-                    target: e.targetId.trim(), 
+                links: data.links.map( e => ({
+                    source: e.source.trim(), 
+                    target: e.target.trim(), 
                     weight: e.weight
                 }))
             })

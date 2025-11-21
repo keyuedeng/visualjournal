@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma"
-import { assignRing } from "./ring"
 
 export async function saveIdentityGraph(userId, nodes, edges) {
     //wipe old graph
@@ -15,26 +14,24 @@ export async function saveIdentityGraph(userId, nodes, edges) {
                 label: n.label,
                 category: n.category,
                 strength: n.strength,
-                ring: assignRing(n.category), //COMPUTE THIS LATER
+                ring: n.ring,
             }
         })
     }
 
-    const validIds = new Set(nodes.map(n => n.id))
+    // insert edges
+    for (const e of edges) {
+        // prevent edges pointing to non-existent nodes
+        if (!nodes.find(n => n.id === e.sourceId)) continue
+        if (!nodes.find(n => n.id === e.targetId)) continue
 
-    const filterEdges = edges.filter (e =>
-        validIds.has(e.source) && validIds.has(e.target)
-    )
-
-    //insert edges
-    for (const e of filterEdges) {
         await prisma.identityEdge.create({
             data: {
-                id: `${e.source}__${e.target}`,
-                userId,
-                sourceId: e.source,
-                targetId: e.target,
-                weight: e.weight
+                id: e.id,
+                userId, 
+                sourceId: e.sourceId, 
+                targetId: e.targetId,
+                weight: e.weight,
             }
         })
     }
