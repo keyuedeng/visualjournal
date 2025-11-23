@@ -21,7 +21,6 @@ export async function POST(request) {
                     content: `Analyze the journal entry and return:
                     - "topics": array of main themes
                     - "sentiment": number between -1 and 1
-                    - "emotions": array of emotion words
                     
                     Respond ONLY in JSON.
                     
@@ -38,7 +37,6 @@ export async function POST(request) {
                 entryId,
                 topics: analysis.topics || [],
                 sentiment: analysis.sentiment || 0,
-                emotions: analysis.emotions || [],
             },
         })
 

@@ -59,7 +59,7 @@ export default function JournalPage() {
             const savedEntry = postData.entry
 
             // call analyser
-            await fetch("/api/analyse", {
+            const analyseRes = await fetch("/api/analyse", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -67,6 +67,11 @@ export default function JournalPage() {
                     text: savedEntry.body,
                 }),
             })
+
+            if (!analyseRes.ok) {
+                console.error('Failed to analyse entry')
+            }
+
 
         } catch (err) {
             console.error('Error saving entry', err)

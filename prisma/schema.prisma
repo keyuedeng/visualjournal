@@ -23,7 +23,6 @@ model Insight {
   entryId   String   @unique
   topics    String[]
   sentiment Float
-  emotions  String[]
   createdAt DateTime @default(now())
 
   entry Entry @relation(fields: [entryId], references: [id])
