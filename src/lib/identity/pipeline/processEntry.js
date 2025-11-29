@@ -27,4 +27,8 @@ export async function processEntry(entryId, entrybody) {
     }
 
     // LATER: PROCESS INSIGHTS TO GIVE NODES THEN EDGES AND SAVE
+    return {
+        chunks, 
+        insights: insightRecords,
+    }
 }

@@ -6,7 +6,7 @@ export async function extractInsight(text) {
 You are an identity-oriented topic extractor.
 
 Your goal is to analyse a SINGLE semantic chunk of a journal entry and extract:
-- "topics": 1-5 identity-relevant theme present in the chunk
+- "topics": 1-4 identity-relevant theme present in the chunk
 - "sentiment": a number between -1 and 1 representing the overall emotional tone
 
 You may extract themes based on BOTH:
@@ -27,7 +27,7 @@ Guidlines for TOPICS:
 - Bad examples: “tea”, “gym”, “Instagram”, “strawberries” (unless emotionally meaningful).
 - You may infer deeper themes if the writing style clearly implies them.
 - Group similar ideas together (e.g., “exhausted”, “low energy” → “fatigue”).
-- Do not output more than 5 topics
+- Do not output more than 4 topics
 
 Return ONLY valid JSON. No backticks no prefix/suffix.
 
