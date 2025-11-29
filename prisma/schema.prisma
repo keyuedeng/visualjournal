@@ -23,6 +23,7 @@ model Insight {
   entryId   String   @unique
   topics    String[]
   sentiment Float
+  chunkIndex Int
   createdAt DateTime @default(now())
 
   entry Entry @relation(fields: [entryId], references: [id])
