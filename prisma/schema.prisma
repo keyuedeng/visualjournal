@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Entry {
+  id        String     @id @default(cuid())
+  title     String     @db.VarChar(255)
+  body      String     @db.Text
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  userId    String
+  insights  Insight[]
+}
+
+model Insight {
+  id         String   @id @default(cuid())
+  entryId    String
+  topics     String[]
+  sentiment  Float
+  chunkIndex Int
+  createdAt  DateTime @default(now())
+
+  entry Entry @relation(fields: [entryId], references: [id])
+}
+
+model TopicAlias {
+  id              String   @id @default(cuid())
+  userId          String
+  topic           String
+  embedding       Float[]
+  canonicalNodeId String?
+  createdAt       DateTime @default(now())
+
+  node Node? @relation(fields: [canonicalNodeId], references: [id])
+}
+
+model Node {
+  id        String   @id @default(cuid())
+  userId    String
+  label     String
+  category  String?
+  count     Int      @default(1)
+  embedding Float[]
+  contexts  Json[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  topicAliases TopicAlias[]
+}
