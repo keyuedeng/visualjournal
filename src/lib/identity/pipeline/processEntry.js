@@ -27,6 +27,25 @@ export async function processEntry(entryId, entrybody) {
     }
 
     // LATER: PROCESS INSIGHTS TO GIVE NODES THEN EDGES AND SAVE
+    /*
+    for topic for insight.topics
+        normalise topic
+        get/create topicalias
+        if alias already has node -> done
+        if no node assigned -> find best match
+            if similarity > high threshold
+                link alias to node
+            else if similarity > midthreshold
+                use llm to determine whether to use closest existing node or create new node
+            else 
+                create new node
+                link alias to node
+        
+        update node embedding (centroid)
+
+        add context snippet 
+    */
+
     return {
         chunks, 
         insights: insightRecords,

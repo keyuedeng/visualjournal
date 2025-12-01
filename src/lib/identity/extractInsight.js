@@ -11,23 +11,27 @@ Your goal is to analyse a SINGLE semantic chunk of a journal entry and extract:
 
 You may extract themes based on BOTH:
 - what is explicitly written
-- what is implied through the way the writer expresses themselves
+- what is implied through tone, behaviour, or emotional expression
 
-This includes:
-- tone of voice
+Types of acceptable TOPICS include:
+1. Internal themes:
 - emotional patterns
 - thinking patterns
-- motivation levels
-- implicit values or concerns
+- motivation
+- concerns or values
+- identity changes
+2. External themes that reflect identity or behaviour:
+- hobbies and interests
+- routines and habits
+- social relationships or interactions
+- lifestyle preferences
+- meaningful activities the writer repeatedly engages in
 
 Guidlines for TOPICS:
-- Topics should reflect psychological or experiential themes, not surface-level nouns.
-- Good examples: “focus difficulty”, “fatigue”, “identity change”, “self-regulation”, 
-  “emotional overwhelm”, “relationship closeness”, “avoidance”, “personal growth”.
-- Bad examples: “tea”, “gym”, “Instagram”, “strawberries” (unless emotionally meaningful).
-- You may infer deeper themes if the writing style clearly implies them.
-- Group similar ideas together (e.g., “exhausted”, “low energy” → “fatigue”).
-- Do not output more than 4 topics
+- Topics should be meaningful to the person's identity, behaviour, mood, or patterns.
+- Avoid trivial nouns (e.g., “tea”, “strawberries”) unless they clearly relate to mood, identity, or behaviour.
+- Group similar ideas together (e.g., “tired”, “low energy” → “fatigue”).
+- Do not output more than 4 topics. 
 
 Return ONLY valid JSON. No backticks no prefix/suffix.
 
