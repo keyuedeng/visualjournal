@@ -13,7 +13,9 @@ export async function updateNodeContext(nodeId, context) {
         select: { contexts: true },
     })
 
-    const currContexts = Array.isArray(node.contexts) ? node.context: []
+    const currContexts = Array.isArray(node.contexts) ? node.contexts: []
+
+    const updatedContexts = [...currContexts, context]
 
     if (updatedContexts.length > 10) { //maybe can make limit higher, 50?
         updatedContexts.shift()
