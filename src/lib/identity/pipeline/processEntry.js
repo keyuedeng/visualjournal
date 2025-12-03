@@ -1,12 +1,12 @@
 import { semanticChunk } from "../chunking";
 import { extractInsight } from "../extractInsight";
 import { canonicaliseTopicAlias } from "../nodes/canonicaliseTopicAlias";
-import { prisma } from "@/lib/prisma";
+import { createOrUpdateEdges } from "../graph/createOrUpdateEdges";
 
 export async function processEntry(userId, entryId, entrybody) {
     const { chunks } = await semanticChunk(entrybody)
 
-    const allNodeIds = new Set(); //track all nodes touched by this entry
+    const allTouchedNodes = new Set(); //track all nodes touched by this entry
 
     // extract insights per chunk
     for (const chunk of chunks) {
@@ -29,16 +29,12 @@ export async function processEntry(userId, entryId, entrybody) {
             })
 
             chunkNodeIds.push(nodeId)
-            allNodeIds.add(nodeId)
+            allTouchedNodes.add(nodeId)
         }
 
         // UPDATE EDGES
-
-
-
+        await createOrUpdateEdges(userId, chunkNodeIds)
     }
 
-
-
-    return Array.from(allNodeIds)
+    return Array.from(allTouchedNodes)
 }
