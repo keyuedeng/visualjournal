@@ -20,7 +20,7 @@ export async function updateNodeEmbedding(nodeId){
     
     for (const topic of topics) {
         const vec = topic.embedding
-        for (i = 0; i<dimension; i++) {
+        for (let i = 0; i<dimension; i++) {
             sumVec[i] += vec[i]
         }
     }

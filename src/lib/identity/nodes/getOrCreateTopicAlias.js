@@ -4,7 +4,7 @@ import { normaliseTopic } from "./normaliseTopic"
 
 export async function getOrCreateTopicAlias(userId, rawTopic) {
     if (!rawTopic) {
-        throw new Error("getOrCreateTopicAlias: rawTopic is requireed")
+        throw new Error("getOrCreateTopicAlias: rawTopic is required")
     }
 
     // normalise raw topic string
@@ -22,7 +22,7 @@ export async function getOrCreateTopicAlias(userId, rawTopic) {
         return existing
     }
     const embedding = await embedText(topic)
-    alias = await prisma.topicAlias.create({
+    const alias = await prisma.topicAlias.create({
         data: {
             userId,
             topic,

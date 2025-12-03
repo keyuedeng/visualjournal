@@ -71,6 +71,10 @@ export async function canonicaliseTopicAlias({
             where: {id: alias.id},
             data: { canonicalNodeId: closestNode.id }
         })
+        await prisma.node.update({
+            where: { id: closestNode.id },
+            data: { count: { increment: 1 } }
+        })
         await updateNodeEmbedding(closestNode.id)
         await updateNodeContext(closestNode.id, {
             text: snippet,
@@ -84,13 +88,17 @@ export async function canonicaliseTopicAlias({
 
     // mid similarity, use llm to confirm
     if (similarity >= MID_THRESHOLD) {
-        const decision = await llmNodeSimilarityCheck(alias.topic, closestNode.label) //shouldnt u input the snippet this topic was generated from
+        const decision = await llmNodeSimilarityCheck(alias.topic, closestNode.label) 
         
         if (decision === "yes") {
             //assign to node
             await prisma.topicAlias.update({
                 where: {id: alias.id},
                 data: { canonicalNodeId: closestNode.id }
+            })
+            await prisma.node.update({
+                where: { id: closestNode.id },
+                data: { count: { increment: 1 } }
             })
             await updateNodeEmbedding(closestNode.id)
             await updateNodeContext(closestNode.id, {

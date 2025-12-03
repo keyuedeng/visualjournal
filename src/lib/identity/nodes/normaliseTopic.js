@@ -1,5 +1,4 @@
 import { openai } from "@/lib/openai"
-import { raw } from "@prisma/client/runtime/library"
 
 export async function normaliseTopic(rawTopic) {
     const prompt = `

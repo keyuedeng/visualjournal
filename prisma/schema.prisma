@@ -53,3 +53,23 @@ model Node {
 
   topicAliases TopicAlias[]
 }
+
+model Edge {
+    id String @id @default(cuid())
+    userId String
+
+    sourceId String
+    targetId String
+
+    weight Int @default(1)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    source Node @relation("EdgeSource", fields: [sourceId], references: [id])
+    target Node @relation("EdgeTarget", fields: [targetId], references: [id])
+
+    @@index([sourceId])
+    @@index([targetId])
+    @@unique([userId, sourceId, targetId]) // prevents duplicate edges
+}
