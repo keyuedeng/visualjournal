@@ -1,8 +1,8 @@
-import { getOrCreateTopicAlias } from "./getOrCreateTopicAlias";
-import { createNodeFromTopic } from "./createNodeFromTopic";
-import { findClosestNode } from "./findClosestNode";
-import { updateNodeContext } from "./updateNodeContext";
-import { updateNodeEmbedding } from "./updateNodeEmbedding";
+import { getOrCreateTopicAlias } from "../topics/getOrCreateTopicAlias";
+import { createNodeFromTopic } from "../nodes/createNodeFromTopic";
+import { findClosestNode } from "../nodes/findClosestNode";
+import { updateNodeContext } from "../nodes/updateNodeContext";
+import { updateNodeEmbedding } from "../nodes/updateNodeEmbedding";
 import { prisma } from "@/lib/prisma";
 import { llmNodeSimilarityCheck } from "./llmNodeSimilarityCheck";
 

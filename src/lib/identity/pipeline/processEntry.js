@@ -1,6 +1,6 @@
 import { semanticChunk } from "../chunking";
-import { extractInsight } from "../extractInsight";
-import { canonicaliseTopicAlias } from "../nodes/canonicaliseTopicAlias";
+import { extractInsight } from "../insights/extractInsight";
+import { canonicaliseTopicAlias } from "../canonicalisation/canonicaliseTopicAlias";
 import { createOrUpdateEdges } from "../graph/createOrUpdateEdges";
 
 export async function processEntry(userId, entryId, entrybody) {
