@@ -5,7 +5,7 @@ import { openai } from "@/lib/openai";
 export async function semanticChunk(text) {
     if (!text || text.trim().length === 0) {
         return [];
-    } else if (text.length <= 300) {
+    } else if (text.length <= 500) {
         return [{ index: 1, text}]
     }
 

@@ -7,8 +7,8 @@ import { prisma } from "@/lib/prisma";
 import { llmNodeSimilarityCheck } from "./llmNodeSimilarityCheck";
 
 // similarity thresholds 
-const HIGH_THRESHOLD = 0.82
-const MID_THRESHOLD = 0.65
+const HIGH_THRESHOLD = 0.70
+const MID_THRESHOLD = 0.50
 const LOW_THRESHOLD = 0.00
 
 /*

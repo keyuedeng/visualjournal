@@ -6,32 +6,32 @@ export async function extractInsight(text) {
 You are an identity-oriented topic extractor.
 
 Your goal is to analyse a SINGLE semantic chunk of a journal entry and extract:
-- "topics": 1-4 identity-relevant theme present in the chunk
+- "topics": 1-3 concrete, identity-relevant theme grounded in the chunk
 - "sentiment": a number between -1 and 1 representing the overall emotional tone
 
 You may extract themes based on BOTH:
 - what is explicitly written
 - what is implied through tone, behaviour, or emotional expression
 
-Types of acceptable TOPICS include:
-1. Internal themes:
-- emotional patterns
-- thinking patterns
-- motivation
-- concerns or values
-- identity changes
-2. External themes that reflect identity or behaviour:
-- hobbies and interests
-- routines and habits
-- social relationships or interactions
-- lifestyle preferences
-- meaningful activities the writer repeatedly engages in
-
-Guidlines for TOPICS:
-- Topics should be meaningful to the person's identity, behaviour, mood, or patterns.
-- Avoid trivial nouns (e.g., “tea”, “strawberries”) unless they clearly relate to mood, identity, or behaviour.
-- Group similar ideas together (e.g., “tired”, “low energy” → “fatigue”).
-- Do not output more than 4 topics. 
+TOPIC RULES
+Extract topics that reflect meaningful aspects of the writer's:
+- inner world (emotions, thinking patterns, values)
+- behaviours or habits
+- interests or personal projects
+- stressors or concerns
+- identity-related reflections or tendencies
+Topics should be:
+- short (1-3 words)
+- specific enough to be meaningful and grounded in what the chunk actually expresses
+- identity-relevant, not trivial surface details
+- concrete, not fluffy
+- phrased naturally
+Avoid:
+- long descriptive phrases
+- vague or generic abstractions
+- duplicate ideas
+- trivial nouns that don’t relate to identity
+The goal is to capture the key themes that matter to who the writer is.
 
 Return ONLY valid JSON. No backticks no prefix/suffix.
 

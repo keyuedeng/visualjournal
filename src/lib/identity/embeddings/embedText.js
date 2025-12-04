@@ -12,7 +12,7 @@ export async function embedText(text) {
         input: cleaned,
     })
 
-    const vector = response.data[0].embedding
+    const vector = embedding.data[0].embedding
 
     return vector
 }

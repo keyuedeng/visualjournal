@@ -8,7 +8,7 @@ export async function getOrCreateTopicAlias(userId, rawTopic) {
     }
 
     // normalise raw topic string
-    const topic = normaliseTopic(rawTopic)
+    const topic = await normaliseTopic(rawTopic)
 
     // check if this normalised topic exists in schema already
     const existing = await prisma.topicAlias.findFirst({

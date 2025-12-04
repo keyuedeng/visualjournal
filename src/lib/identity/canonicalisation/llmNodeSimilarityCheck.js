@@ -8,13 +8,25 @@ output: yes,no (string)
 
 export async function llmNodeSimilarityCheck(topic, nodeLabel) {
     const prompt = `
-You are a classifier deciding if TWO PHRASES refer to the SAME CONCEPT.
+You are deciding if TWO TOPIC PHRASES refer to the SAME specific identity concept.
 
-Rules:
-- "Same concept" means they represent the same identity theme, value, habit, role, or idea.
-- Ignore grammar differences, plurality, tense, and stylistic variation.
-- Focus on conceptual equivalence.
-- If they are related but NOT the same concept, then answer "no".
+Merge ONLY if:
+- They refer to the same concrete behaviour, emotion, stressor, habit, or identity idea.
+- They are direct synonyms or standard variations ("restlessness" vs "inner restlessness").
+- One is simply a more specific form of the other ("identity project" → "identity").
+- They describe the same emotional state ("overwhelm" vs "emotional overwhelm").
+
+Do NOT merge if:
+- They belong to the same broad category but represent different concepts 
+  (e.g., "self care" vs "growth", "reflection" vs "mindfulness").
+- They express opposite or contrasting states.
+- They deal with different domains (e.g., work vs relationships).
+- One is emotional and the other behavioural.
+- They only share a vague psychological similarity.
+
+Important Rule:
+- Broad similarity is NOT enough. 
+- Merge ONLY when the two phrases would make the same node on a personal identity map.
 
 Output format:
 - Respond ONLY with a JSON object of the form:
