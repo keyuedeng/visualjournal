@@ -1,13 +1,11 @@
-import { prisma } from '@/lib/prisma' // so we can use it in our code
+import { prisma } from '@/lib/prisma'
+import { processEntry } from '@/lib/identity/pipeline/processEntry'
 
 export async function POST(request) {
     try {
-        const data = await request.json() //await used in async function to pause the execution of the function until a promise settles
+        const { userId, title, body }= await request.json() //await used in async function to pause the execution of the function until a promise settles
         
-        const title = data.title
-        const body = data.body?.trim()
-
-        if (!body) {
+        if (!body || body.trim().length === 0) {
             return Response.json(
                 { error: "Body cannot be empty" },
                 { status: 400 }
@@ -16,16 +14,22 @@ export async function POST(request) {
 
         const savedEntry = await prisma.entry.create({
             data: { 
-                title, 
+                userId, 
+                title: title || "", 
                 body,
-                userId: "demo-user",
             },
         })
 
-        return Response.json({ message: "Entry created successfully", entry: savedEntry }) 
+        const nodeIds = await processEntry(userId, savedEntry.id, savedEntry.body)
+
+        return Response.json({
+            success: true, 
+            entry: savedEntry, 
+            nodes: nodeIds
+        }) 
     } catch (error) {
-        console.error("Failed to save entry:", error)
-        return Response.json({ error: "Failed to save entry" }, { status: 500 })
+        console.error("Failed to process entry:", error)
+        return Response.json({ error: "Internal Server Error" }, { status: 500 })
     }
 }
 

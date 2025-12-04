@@ -52,6 +52,9 @@ model Node {
   updatedAt DateTime @updatedAt
 
   topicAliases TopicAlias[]
+
+  outgoingEdges Edge[] @relation("EdgeSource")
+  incomingEdges Edge[] @relation("EdgeTarget")
 }
 
 model Edge {

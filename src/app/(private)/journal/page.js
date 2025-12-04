@@ -42,36 +42,21 @@ export default function JournalPage() {
             const postRes = await fetch("/api/entries", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title, body }),
+                body: JSON.stringify({
+                    userId: "demo-user",
+                    title, 
+                    body,
+                }),
             })
 
             if (!postRes.ok) {
                 console.error('Failed to save entry', await postRes.text())
+                return
             }
 
             //clear input
             setTitle("")
             setBody("")
-
-            
-            // get saved entry details
-            const postData = await postRes.json()
-            const savedEntry = postData.entry
-
-            // call analyser
-            const analyseRes = await fetch("/api/analyse", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    entryId: savedEntry.id,
-                    text: savedEntry.body,
-                }),
-            })
-
-            if (!analyseRes.ok) {
-                console.error('Failed to analyse entry')
-            }
-
 
         } catch (err) {
             console.error('Error saving entry', err)

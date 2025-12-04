@@ -1,4 +1,4 @@
-import { openai } from "../openai";
+import { openai } from "@/lib/openai";
 
 // Uses LLM based semantic analysis to segment raw text into topic-consistent chunks for downstream processing
 
