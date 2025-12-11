@@ -38,6 +38,7 @@ Topic: "${rawTopic}"
 Return:`
     const response = await openai.chat.completions.create({
         model: "gpt-4o-mini",
+        temperature: 0.1,
         messages: [{ role: "user", content: prompt}],
     })
 

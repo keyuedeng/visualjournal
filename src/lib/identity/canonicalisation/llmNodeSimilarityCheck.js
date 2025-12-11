@@ -42,6 +42,7 @@ Are these the same concept?`
     
     const result = await openai.chat.completions.create({
         model: "gpt-4o-mini",
+        temperature: 0.1,
         response_format: { type: "json_object" },
         messages: [
             { role: "user", content: prompt }
