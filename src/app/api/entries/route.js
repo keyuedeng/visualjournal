@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma'
 import { processEntry } from '@/lib/identity/pipeline/processEntry'
 
+export const maxDuration = 60
+
 export async function POST(request) {
     try {
         const { userId, title, body }= await request.json() //await used in async function to pause the execution of the function until a promise settles

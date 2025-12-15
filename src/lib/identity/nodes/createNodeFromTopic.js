@@ -12,7 +12,7 @@ export async function createNodeFromTopic(alias) {
         data: {
             userId, 
             label, 
-            category: "unknown",
+            categories: [],
             count: 1,
             embedding,
             contexts: [],

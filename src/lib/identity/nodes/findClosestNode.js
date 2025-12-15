@@ -28,7 +28,7 @@ export async function findClosestNode(userId, embedding) {
             id: true,
             label: true,
             embedding: true,
-            category: true, 
+            categories: true, 
             count: true,
         },
     })
