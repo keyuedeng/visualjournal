@@ -8,7 +8,7 @@ output: creates or updates weighted edges between them
 - edge weight increments when nodes co-occur in a chunk 
 */
 
-export async function createOrUpdateEdges(userId, nodeIds) {
+export async function createOrUpdateEdges(userId, nodeIds, weightIncrement = 1) {
     if (!nodeIds || nodeIds.length < 2) return
 
     //dedupe 
@@ -56,7 +56,7 @@ export async function createOrUpdateEdges(userId, nodeIds) {
             updates.push(
                 prisma.edge.update({
                     where: { id: existing.id },
-                    data: { weight: existing.weight + 1 }
+                    data: { weight: existing.weight + weightIncrement }
                 })
             )
         } else {
@@ -66,7 +66,7 @@ export async function createOrUpdateEdges(userId, nodeIds) {
                         userId,
                         sourceId: pair.sourceId, 
                         targetId: pair.targetId,
-                        weight: 1,
+                        weight: weightIncrement,
                     }
                 })
             )

@@ -46,8 +46,14 @@ export async function processEntry(userId, entryId, entrybody) {
         }
 
         // UPDATE EDGES
-        await createOrUpdateEdges(userId, chunkNodeIds)
+        await createOrUpdateEdges(userId, chunkNodeIds, 1)
+    }
+    // entry level edges - broader connections across whole entry
+    const entryNodeIds = Array.from(allTouchedNodes)
+
+    if (entryNodeIds.length > 1) {
+        await createOrUpdateEdges(userId, entryNodeIds, 0.3)
     }
 
-    return Array.from(allTouchedNodes)
+    return entryNodeIds
 }
