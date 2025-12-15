@@ -5,11 +5,11 @@ import { updateNodeContext } from "../nodes/updateNodeContext";
 import { updateNodeEmbedding } from "../nodes/updateNodeEmbedding";
 import { prisma } from "@/lib/prisma";
 import { llmNodeSimilarityCheck } from "./llmNodeSimilarityCheck";
+import { classifyNodeCategories } from "../nodes/classifyNodeCategories";
 
 // similarity thresholds 
 const HIGH_THRESHOLD = 0.70
-const MID_THRESHOLD = 0.50
-const LOW_THRESHOLD = 0.00
+const MID_THRESHOLD = 0.55
 
 /*
 canonicalises a single topic:
@@ -83,6 +83,16 @@ export async function canonicaliseTopicAlias({
             topic: alias.topic,
         })
 
+        // classify node if mature
+        const updatedNode = await prisma.node.findUnique({
+            where: { id: closestNode.id },
+            select: { count: true }
+        })
+
+        if (updatedNode.count >= 3) {
+            await classifyNodeCategories(closestNode.id)
+        }
+
         return closestNode.id
     }
 
@@ -107,6 +117,16 @@ export async function canonicaliseTopicAlias({
                 sentiment,
                 topic: alias.topic,
             })
+
+            // classify node if mature
+            const updatedNode = await prisma.node.findUnique({
+                where: { id: closestNode.id },
+                select: { count: true }
+            })
+
+            if (updatedNode.count >= 3) {
+                await classifyNodeCategories(closestNode.id)
+            }
 
             return closestNode.id
         }

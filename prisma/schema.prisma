@@ -44,7 +44,7 @@ model Node {
   id        String   @id @default(cuid())
   userId    String
   label     String
-  category  String?
+  categories  String[] @default([])
   count     Int      @default(1)
   embedding Float[]
   contexts  Json[]
