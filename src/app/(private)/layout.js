@@ -5,7 +5,7 @@ export default function PrivateLayout ({children}) {
     return (
         <div className="flex h-screen">
             <Sidebar />
-            <main className="flex-1 p-6 pl-8 overflow-y-auto">
+            <main className="flex-1 overflow-y-auto">
                 {children}
             </main>
         </div>

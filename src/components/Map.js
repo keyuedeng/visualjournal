@@ -11,9 +11,15 @@ export default function Map() {
     const [graphData, setGraphData] = useState({ nodes: [], links:[] })
     const [dimensions, setDimensions] = useState({ width: 800, height: 600 })
     const fgRef = useRef()
+    const containerRef = useRef()
 
     useEffect(() => {
-        setDimensions({ width: window.innerWidth, height: window.innerHeight })
+        if (containerRef.current) {
+            setDimensions({ 
+                width: containerRef.current.offsetWidth, 
+                height: containerRef.current.offsetHeight 
+            })
+        }
     }, [])
 
     useEffect(() => {
@@ -35,15 +41,33 @@ export default function Map() {
     }, [graphData])
 
     return (
-        <div className="h-150 flex justify-center items-center border-1 border-neutral-300 m-6 shadow-sm rounded-xl">
+        <div ref={containerRef} className="h-full flex justify-center items-center">
             <ForceGraph2D
                 ref={fgRef}
                 graphData={graphData}
                 width={dimensions.width}
                 height={dimensions.height}
                 nodeLabel="label"
+                nodeCanvasObject={(node, ctx, globalScale) => {
+                    // Draw the node circle
+                    const size = node.count > 2 ? 8 : node.count > 1 ? 6 : 3
+                    ctx.beginPath()
+                    ctx.arc(node.x, node.y, size, 0, 2 * Math.PI)
+                    ctx.fillStyle = node.color || '#999'
+                    ctx.fill()
+                    
+                    // Draw label only for count > 1
+                    if (node.count > 1) {
+                        const label = node.label
+                        const fontSize = 12/globalScale
+                        ctx.font = `${fontSize}px Sans-Serif`
+                        ctx.textAlign = 'center'
+                        ctx.textBaseline = 'middle'
+                        ctx.fillStyle = '#333'
+                        ctx.fillText(label, node.x, node.y + size + 5)
+                    }
+                }}
                 nodeVal={node => node.count > 2 ? 8 : node.count > 1 ? 4 : 2}
-                linkCurvature={0.1}
             />
         </div>
     )
