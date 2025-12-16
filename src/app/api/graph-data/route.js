@@ -8,7 +8,7 @@ export async function GET() {
         const nodeIds = nodes.map(n => n.id)
         const edges = await prisma.edge.findMany({
             where: {
-                AND: [
+                OR: [
                     { sourceId: { in: nodeIds }}, 
                     { targetId: { in: nodeIds }}
                 ]
@@ -16,11 +16,22 @@ export async function GET() {
         })
 
         const links = edges.map(edge => ({
-            source: edge.souceId, 
+            source: edge.sourceId, 
             target: edge.targetId,
             weight: edge.weight
         }))
-        return Response.json({ nodes,links })
+
+        const additionalNodeIds = edges
+            .flatMap(e => [e.sourceId, e.targetId])
+            .filter(id => !nodeIds.includes(id))
+        
+        const additionalNodes = await prisma.node.findMany({
+            where: { id: { in: additionalNodeIds}}
+        })
+        const allNodes = [...nodes,...additionalNodes]
+
+
+        return Response.json({ nodes: allNodes, links })
     } 
     catch (error) {
         console.error("Failed to fetch graph data:", error)

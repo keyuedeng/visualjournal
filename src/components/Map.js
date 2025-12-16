@@ -1,6 +1,10 @@
 "use client"
 import { useState, useEffect } from "react"
-import ForceGraph2D from "react-force-graph-2d"
+import dynamic from "next/dynamic"
+
+const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
+    ssr: false
+})
 
 export default function Map() {
     const [graphData, setGraphData] = useState({ nodes: [], links:[] })
@@ -16,7 +20,7 @@ export default function Map() {
         <ForceGraph2D
             graphData={graphData}
             nodeLabel="label"
-            linkDirectionalParticles={2}
+            nodeVal={node => node.count > 1 ? 6 : 2}
         />
     )
 }
