@@ -7,7 +7,7 @@ const ForceGraph2D = dynamic(() => import("react-force-graph-2d"), {
     ssr: false
 })
 
-export default function Map() {
+export default function Map({ onNodeSelect }) {
     const [graphData, setGraphData] = useState({ nodes: [], links:[] })
     const [dimensions, setDimensions] = useState({ width: 800, height: 600 })
     const fgRef = useRef()
@@ -68,6 +68,7 @@ export default function Map() {
                     }
                 }}
                 nodeVal={node => node.count > 2 ? 8 : node.count > 1 ? 4 : 2}
+                onNodeClick={(node) => onNodeSelect(node.id)}
             />
         </div>
     )
