@@ -48,6 +48,7 @@ model Node {
   count     Int      @default(1)
   embedding Float[]
   contexts  Json[]
+  llmSummary String? @db.Text
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

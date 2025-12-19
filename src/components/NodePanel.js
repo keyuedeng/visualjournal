@@ -31,16 +31,15 @@ export default function NodePanel({ nodeId }) {
             })
     },[nodeId])
 
-    if (!nodeId) return <div className="p-4">Click a node to see details</div>
-    if (loading) return <div className="p-4">Loading...</div>
-    if (!data) return <div className="p-4">No data available</div>
+    if (!nodeId) return <div className="p-4 border border-neutral-300 rounded-md h-full overflow-y-auto">Click a node to see details</div>
+    if (loading) return <div className="p-4 border border-neutral-300 rounded-md h-full overflow-y-auto">Loading...</div>
+    if (!data) return <div className="p-4 border border-neutral-300 rounded-md h-full overflow-y-auto">No data available</div>
 
     return (
         <div className="p-4 border border-neutral-300 rounded-md h-full overflow-y-auto"> 
             <h2 className="text-xl font-semibold mb-1">{data.summary.label}</h2>
             <p className="text-sm text-neutral-500 mb-4">
                 Appears in {data.summary.count} {data.summary.count === 1 ? 'entry' : 'entries'}
-                {data.summary.timeSpan && ` over ${data.summary.timeSpan}`}
             </p>
             <p className="text-sm leading-relaxed">{data.llmSummary}</p>
         </div>

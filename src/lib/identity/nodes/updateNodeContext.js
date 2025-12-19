@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { generateNodeSummary } from "./generateNodeSummary";
 
 export async function updateNodeContext(nodeId, context) {
     if (!nodeId) {
@@ -10,7 +11,12 @@ export async function updateNodeContext(nodeId, context) {
 
     const node = await prisma.node.findUnique({
         where: {id: nodeId },
-        select: { contexts: true },
+        select: { 
+            contexts: true,
+            count: true,
+            label: true,
+            categories: true
+        },
     })
 
     const currContexts = Array.isArray(node.contexts) ? node.contexts: []
@@ -21,9 +27,21 @@ export async function updateNodeContext(nodeId, context) {
         updatedContexts.shift()
     }
 
+    // Generate summary if node will have count >= 2
+    let llmSummary = null
+    if (node.count >= 2) {
+        llmSummary = await generateNodeSummary({
+            ...node,
+            contexts: updatedContexts
+        })
+    }
+
     const updatedNode = await prisma.node.update({
         where: { id: nodeId },
-        data: { contexts: updatedContexts },
+        data: { 
+            contexts: updatedContexts,
+            ...(llmSummary && { llmSummary })
+        },
     })
 
     return updatedNode
