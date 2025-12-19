@@ -105,7 +105,7 @@ ${contextsText}
 
 This concept is connected to: ${connections_text}
 
-Write a 3-4 sentence reflection that:
+Write a 2-3 sentence reflection that:
 1. Gently explains why this concept keeps showing up for you
 2. Notices any repeated tensions, questions, or perspectives in how you describe it
 3. Interprets the meaning behind the words, not just the topic itself

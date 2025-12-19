@@ -68,7 +68,11 @@ export default function Map({ onNodeSelect }) {
                     }
                 }}
                 nodeVal={node => node.count > 2 ? 8 : node.count > 1 ? 4 : 2}
-                onNodeClick={(node) => onNodeSelect(node.id)}
+                onNodeClick={(node) => {
+                    if (node.count > 1) {
+                        onNodeSelect(node.id)
+                    }
+                }}
             />
         </div>
     )
