@@ -11,7 +11,7 @@ export default function MapPage() {
             <div className="flex-grow">
                 <Map onNodeSelect={setSelectedNodeId}/>
             </div>
-            <div className="w-80 py-4 pr-2">
+            <div className="w-100 py-4 pr-2">
                 <NodePanel nodeId={selectedNodeId} />
             </div>
         </div>

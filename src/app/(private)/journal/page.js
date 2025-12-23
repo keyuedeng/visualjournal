@@ -21,6 +21,7 @@ export default function JournalPage() {
     }
     const formatted = today.toLocaleDateString("en-US", options)
     const [entries, setEntries] = useState([])
+    const [loading, setLoading] = useState(true)
 
     //fetch entries when page loads
     useEffect(() => {
@@ -28,6 +29,7 @@ export default function JournalPage() {
             const res = await fetch("/api/entries") // could specify GET but automatically uses GET
             const data = await res.json() //parse jason data into js array
             setEntries(data) //changes entries state to all the entries
+            setLoading(false) //done loading
         }
 
         loadEntries() //runs the above function 
@@ -139,48 +141,55 @@ export default function JournalPage() {
                     </button>
                 </form>
             </div>
-            {entries.length === 0 ? (
-                <p>No entries yet.</p>
+            {loading ? (
+                <div>Loading entries...</div>
             ) : (
-                <ul>
-                    {entries.map((entry) => (
-                        <li key={entry.id}>
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <button className="w-full flex justify-between items-center border-t border-neutral-200 px-4 py-2 hover:bg-neutral-100 transition">
-                                        <div className="flex items-center gap-1 text-neutral-700">
-                                            <span>
-                                                {new Date(entry.createdAt).toLocaleDateString("en-US", {
-                                                    month: "short",
-                                                    day: "2-digit",
-                                                })}
-                                            </span>
-                                            <span>-</span>
-                                            {entry.title === "" ? (
-                                                <span className="text-neutral-500">{entry.body.split(' ').slice(0,7).join(' ')}{"..."}</span>
-                                            ) : (
-                                                <span>{entry.title}</span>
-                                            )}
-                                        </div>
-                                        <ArrowUpRight className="w-4 h-4 text-neutral-400" />
-                                    </button>
-                                </DialogTrigger>
-                                <DialogContent className="!max-w-2xl !h-[85vh] overflow-y-auto">
-                                    <DialogHeader className="p-4">
-                                        <DialogTitle>{entry.title}</DialogTitle>
-                                        <DialogDescription>
-                                            {new Date(entry.createdAt).toLocaleString()}
-                                        </DialogDescription>
-                                        <div className = "whitespace-pre-wrap">
-                                            {entry.body}
-                                        </div>
-                                    </DialogHeader>
-                                </DialogContent>
-                            </Dialog>
-                        </li>
-                    ))}
-                </ul>
+                <div>
+                {entries.length === 0 ? (
+                    <p>No entries yet.</p>
+                ) : (
+                    <ul>
+                        {entries.map((entry) => (
+                            <li key={entry.id}>
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <button className="w-full flex justify-between items-center border-t border-neutral-200 px-4 py-2 hover:bg-neutral-100 transition">
+                                            <div className="flex items-center gap-1 text-neutral-700">
+                                                <span>
+                                                    {new Date(entry.createdAt).toLocaleDateString("en-US", {
+                                                        month: "short",
+                                                        day: "2-digit",
+                                                    })}
+                                                </span>
+                                                <span>-</span>
+                                                {entry.title === "" ? (
+                                                    <span className="text-neutral-500">{entry.body.split(' ').slice(0,7).join(' ')}{"..."}</span>
+                                                ) : (
+                                                    <span>{entry.title}</span>
+                                                )}
+                                            </div>
+                                            <ArrowUpRight className="w-4 h-4 text-neutral-400" />
+                                        </button>
+                                    </DialogTrigger>
+                                    <DialogContent className="!max-w-2xl !h-[85vh] overflow-y-auto">
+                                        <DialogHeader className="p-4">
+                                            <DialogTitle>{entry.title}</DialogTitle>
+                                            <DialogDescription>
+                                                {new Date(entry.createdAt).toLocaleString()}
+                                            </DialogDescription>
+                                            <div className = "whitespace-pre-wrap">
+                                                {entry.body}
+                                            </div>
+                                        </DialogHeader>
+                                    </DialogContent>
+                                </Dialog>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div> 
             )}
+            
         </div>
     )
 }

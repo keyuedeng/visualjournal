@@ -37,7 +37,11 @@ export async function POST(request) {
 
 export async function GET() {
     try {
-        const entries = await prisma.entry.findMany()
+        const entries = await prisma.entry.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
         return Response.json(entries)
     }
     catch (error) {

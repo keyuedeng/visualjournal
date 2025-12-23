@@ -125,15 +125,46 @@ Opening variation rule:
 
 Aim for insight over elegance. Interpret carefully, not broadly.`
 
-    try {
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: [{ role: "user", content: prompt }],
-            temperature: 0.45,
-            max_tokens: 200
-        })
+    // Generate bullet points
+    const excerptsForBullets = node.contexts.slice(0, 5)
+    const excerptsText = excerptsForBullets.map((e, i) => `${i + 1}. ${e.text}`).join('\n\n')
+    
+    const bulletPrompt = `Read these journal excerpts about "${node.label}". Extract 3-5 short factual bullet points describing the specific moments or contexts where this appears. Use second person ("you/your") to address the writer directly.
 
-        return completion.choices[0].message.content.trim()
+${excerptsText}
+
+Return only the bullet points, one per line, without numbers or dashes. Each should start with a verb or describe a specific moment. Be concise (max 12 words per point).
+
+Examples:
+- Comparing your progress to others
+- Feeling "late" to becoming who you imagine
+- Noticing tension between comfort and growth`
+
+    try {
+        const [summaryResponse, bulletResponse] = await Promise.all([
+            openai.chat.completions.create({
+                model: "gpt-4o-mini",
+                messages: [{ role: "user", content: prompt }],
+                temperature: 0.45,
+                max_tokens: 200
+            }),
+            openai.chat.completions.create({
+                model: "gpt-4o-mini",
+                messages: [{ role: "user", content: bulletPrompt }],
+                temperature: 0.3,
+                max_tokens: 150
+            })
+        ])
+
+        const summary = summaryResponse.choices[0].message.content.trim()
+        const bulletPoints = bulletResponse.choices[0].message.content
+            .trim()
+            .split('\n')
+            .filter(line => line.trim().length > 0)
+            .map(line => line.replace(/^[-–—•]\s*/, '')) // Remove any bullet markers
+            .slice(0, 5)
+
+        return { summary, bulletPoints }
     } catch (error) {
         console.error("Error generating node summary:", error)
         return null

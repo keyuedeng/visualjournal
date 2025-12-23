@@ -49,6 +49,7 @@ model Node {
   embedding Float[]
   contexts  Json[]
   llmSummary String? @db.Text
+  bulletPoints String[] @default([])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -28,20 +28,23 @@ export async function updateNodeContext(nodeId, context) {
     }
 
     // Generate summary if node will have count >= 2
-    let llmSummary = null
+    let updateData = { contexts: updatedContexts }
+    
     if (node.count >= 2) {
-        llmSummary = await generateNodeSummary({
+        const result = await generateNodeSummary({
             ...node,
             contexts: updatedContexts
         })
+        
+        if (result) {
+            updateData.llmSummary = result.summary
+            updateData.bulletPoints = result.bulletPoints
+        }
     }
 
     const updatedNode = await prisma.node.update({
         where: { id: nodeId },
-        data: { 
-            contexts: updatedContexts,
-            ...(llmSummary && { llmSummary })
-        },
+        data: updateData,
     })
 
     return updatedNode

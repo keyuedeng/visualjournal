@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { generateNodeSummary } from "@/lib/identity/nodes/generateNodeSummary";
+import { openai } from "@/lib/openai";
 
 export async function GET(request, { params }) {
     try {
@@ -52,6 +53,54 @@ export async function GET(request, { params }) {
         const excerpts = node.contexts.slice(0,5)
 
         const uniqueEntryIds = new Set(node.contexts.map(c => c.entryId))
+        
+        // Use stored bullet points or generate if missing
+        let bulletPoints = node.bulletPoints || []
+        
+        if (bulletPoints.length === 0 && node.count >= 2 && excerpts.length > 0) {
+            // Generate bullet points if missing
+            const excerptsText = excerpts.map((e, i) => `${i + 1}. ${e.text}`).join('\n\n')
+            
+            const bulletPrompt = `Read these journal excerpts about "${node.label}". Extract 3-5 short factual bullet points describing the specific moments or contexts where this appears. Use second person ("you/your") to address the writer directly.
+
+${excerptsText}
+
+Return only the bullet points, one per line, without numbers or dashes. Each should start with a verb or describe a specific moment. Be concise (max 12 words per point).
+
+Examples:
+- Comparing your progress to others
+- Feeling "late" to becoming who you imagine
+- Noticing tension between comfort and growth`
+
+            try {
+                const response = await openai.chat.completions.create({
+                    model: "gpt-4o-mini",
+                    messages: [{ role: "user", content: bulletPrompt }],
+                    temperature: 0.3,
+                    max_tokens: 150
+                })
+                
+                bulletPoints = response.choices[0].message.content
+                    .trim()
+                    .split('\n')
+                    .filter(line => line.trim().length > 0)
+                    .map(line => line.replace(/^[-–—•]\s*/, '')) // Remove any bullet markers
+                    .slice(0, 5)
+                
+                // Store them for future use
+                await prisma.node.update({
+                    where: { id },
+                    data: { bulletPoints }
+                })
+            } catch (error) {
+                console.error("Error generating bullet points:", error)
+                // Fallback to simple extraction if LLM fails
+                bulletPoints = excerpts.map(e => {
+                    const text = e.excerpt || e.text
+                    return text.length > 80 ? text.substring(0, 80) + '...' : text
+                })
+            }
+        }
 
         //build connections summary
         const connections = {
@@ -122,21 +171,30 @@ export async function GET(request, { params }) {
         
         // If no stored summary but node qualifies (count >= 2), generate one
         if (!llmSummary && node.count >= 2) {
-            llmSummary = await generateNodeSummary(node)
+            const result = await generateNodeSummary(node)
             
             // Store it for future use
-            if (llmSummary) {
+            if (result) {
                 await prisma.node.update({
                     where: { id },
-                    data: { llmSummary }
+                    data: { 
+                        llmSummary: result.summary,
+                        bulletPoints: result.bulletPoints
+                    }
                 })
+                llmSummary = result.summary
+                // Also update bulletPoints if they weren't already set
+                if (bulletPoints.length === 0) {
+                    bulletPoints = result.bulletPoints
+                }
             }
         }
 
         return Response.json({
             summary, 
             llmSummary,
-            insights: generatedInsights, 
+            insights: generatedInsights,
+            bulletPoints,
             excerpts,
             connections
         })
