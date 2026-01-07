@@ -43,7 +43,7 @@ export const authOptions = {
                 return {
                     id: user.id,
                     email: user.email,
-                    username: user.username
+                    name: user.name
                 }
             }
         }),
@@ -52,14 +52,14 @@ export const authOptions = {
         jwt: async function({ token, user }) {
             if (user) {
                 token.id = user.id
-                token.username = user.username
+                token.name = user.name
             }
             return token
         }, 
         session: async function({ session, token }) {
             if (token) {
                 session.user.id = token.id
-                session.user.username = token.username
+                session.user.name = token.name
             }
             return session
         }

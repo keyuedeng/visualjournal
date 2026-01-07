@@ -4,8 +4,8 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request) {
     const body = await request.json()
-    const { email, username, password } = body
-    if (!email || !username || !password) {
+    const { email, name, password } = body
+    if (!email || !name || !password) {
         return NextResponse.json(
             { error: 'Missing required fields' },
             { status: 400 }
@@ -15,16 +15,13 @@ export async function POST(request) {
     //check if user already exists
     const existingUser = await prisma.user.findFirst({
         where: {
-            OR: [
-                { email: email }, 
-                { username: username }
-            ]
+            email: email
         }
     })
 
     if (existingUser) {
         return NextResponse.json(
-            { error: 'Email or username already taken' },
+            { error: 'Email already registered' },
             { status: 409 }
         )
     }
@@ -35,7 +32,7 @@ export async function POST(request) {
     const user = await prisma.user.create({
         data: {
             email, 
-            username, 
+            name, 
             password: hashedPassword
         }
     })
@@ -47,7 +44,7 @@ export async function POST(request) {
             user: {
                 id: user.id,
                 email: user.email,
-                username: user.username
+                name: user.name
             }
         },
         { status: 201 }
