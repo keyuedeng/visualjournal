@@ -128,7 +128,7 @@ export default function JournalPage() {
                                 titleInputRef.current?.focus()
                             }
                         }}
-                        className="w-full focus:outline-none resize-none overflow-y-auto leading-relaxed text-neutral-700 font-[family-name:var(--font-crimson)] text-lg placeholder:italic placeholder:font-light tracking-wide"
+                        className="w-full focus:outline-none resize-none overflow-y-auto leading-relaxed text-neutral-700 text-lg placeholder:italic placeholder:text-xl placeholder:font-light placeholder:tracking-wide placeholder:font-[family-name:var(--font-crimson)]"
                         style = {{ lineHeight: "1.6" }}
                     />
                     <button 
@@ -175,7 +175,7 @@ export default function JournalPage() {
                                     </DialogTrigger>
                                     <DialogContent className="!max-w-2xl !h-[85vh] overflow-y-auto">
                                         <DialogHeader className="p-4">
-                                            <DialogTitle>{entry.title}</DialogTitle>
+                                            <DialogTitle className="text-neutral-800">{entry.title}</DialogTitle>
                                             <DialogDescription>
                                                 {new Date(entry.createdAt).toLocaleString()}
                                             </DialogDescription>

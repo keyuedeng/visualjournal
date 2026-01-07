@@ -35,10 +35,10 @@ export default function Sidebar() {
                     </button>
 
                     {showPopup && (
-                        <div className="absolute top-full mt-2 right-0 bg-white border rounded shadow-lg p-2 z-10 pointer-events-none">
+                        <div className="absolute top-full mt-2 right-0 bg-white border rounded-md shadow-lg p-2 z-10 pointer-events-none">
                             <button
                                 onClick={() => signOut({ callbackUrl: '/login' })}
-                                className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded pointer-events-auto"
+                                className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md pointer-events-auto"
                             >
                                 Logout
                             </button>
