@@ -42,38 +42,48 @@ export default function Map({ onNodeSelect }) {
 
     return (
         <div ref={containerRef} className="h-full flex justify-center items-center">
-            <ForceGraph2D
-                ref={fgRef}
-                graphData={graphData}
-                width={dimensions.width}
-                height={dimensions.height}
-                nodeLabel="label"
-                nodeCanvasObject={(node, ctx, globalScale) => {
-                    // Draw the node circle
-                    const size = node.count > 2 ? 8 : node.count > 1 ? 6 : 3
-                    ctx.beginPath()
-                    ctx.arc(node.x, node.y, size, 0, 2 * Math.PI)
-                    ctx.fillStyle = node.color || '#999'
-                    ctx.fill()
-                    
-                    // Draw label only for count > 1
-                    if (node.count > 1) {
-                        const label = node.label
-                        const fontSize = 12/globalScale
-                        ctx.font = `${fontSize}px Sans-Serif`
-                        ctx.textAlign = 'center'
-                        ctx.textBaseline = 'middle'
-                        ctx.fillStyle = '#333'
-                        ctx.fillText(label, node.x, node.y + size + 5)
-                    }
-                }}
-                nodeVal={node => node.count > 2 ? 8 : node.count > 1 ? 4 : 2}
-                onNodeClick={(node) => {
-                    if (node.count > 1) {
-                        onNodeSelect(node.id)
-                    }
-                }}
-            />
+            {graphData.nodes.length === 0 ? (
+                <div className="text-center text-neutral-400 max-w-md px-8">
+                    <h2 className="text-2xl font-medium mb-3 text-neutral-600">Nothing here yet</h2>
+                    <p className="text-base leading-relaxed">
+                        Keep writing to see the patterns in your thoughts come alive. 
+                        Your themes will start showing up here once they appear more than once.
+                    </p>
+                </div>
+            ) : (
+                <ForceGraph2D
+                    ref={fgRef}
+                    graphData={graphData}
+                    width={dimensions.width}
+                    height={dimensions.height}
+                    nodeLabel="label"
+                    nodeCanvasObject={(node, ctx, globalScale) => {
+                        // Draw the node circle
+                        const size = node.count > 2 ? 8 : node.count > 1 ? 6 : 3
+                        ctx.beginPath()
+                        ctx.arc(node.x, node.y, size, 0, 2 * Math.PI)
+                        ctx.fillStyle = node.color || '#999'
+                        ctx.fill()
+                        
+                        // Draw label only for count > 1
+                        if (node.count > 1) {
+                            const label = node.label
+                            const fontSize = 12/globalScale
+                            ctx.font = `${fontSize}px Sans-Serif`
+                            ctx.textAlign = 'center'
+                            ctx.textBaseline = 'middle'
+                            ctx.fillStyle = '#333'
+                            ctx.fillText(label, node.x, node.y + size + 5)
+                        }
+                    }}
+                    nodeVal={node => node.count > 2 ? 8 : node.count > 1 ? 4 : 2}
+                    onNodeClick={(node) => {
+                        if (node.count > 1) {
+                            onNodeSelect(node.id)
+                        }
+                    }}
+                />
+            )}
         </div>
     )
 }

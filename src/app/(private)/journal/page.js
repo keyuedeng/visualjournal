@@ -113,7 +113,7 @@ export default function JournalPage() {
                             }
                         }}
                         ref={titleInputRef}
-                        className="w-full text-3xl focus:outline-none pb-3"
+                        className="w-full text-4xl focus:outline-none pb-3 font-[family-name:var(--font-crimson)] placeholder:font-light"
                     />
                     <TextareaAutosize
                         minRows={2}
@@ -128,7 +128,7 @@ export default function JournalPage() {
                                 titleInputRef.current?.focus()
                             }
                         }}
-                        className="w-full focus:outline-none resize-none overflow-y-auto leading-relaxed text-neutral-700"
+                        className="w-full focus:outline-none resize-none overflow-y-auto leading-relaxed text-neutral-700 font-[family-name:var(--font-crimson)] text-lg placeholder:italic placeholder:font-light tracking-wide"
                         style = {{ lineHeight: "1.6" }}
                     />
                     <button 

@@ -31,7 +31,15 @@ export default function NodePanel({ nodeId }) {
             })
     },[nodeId])
 
-    if (!nodeId) return <div className="p-4 border border-neutral-300 rounded-md h-full overflow-y-auto shadow-sm">Click a node to see details</div>
+    if (!nodeId) return (
+        <div className="p-6 border border-neutral-300 rounded-md h-full overflow-y-auto shadow-sm flex items-center justify-center">
+            <div className="text-center text-gray-400 max-w-xs">
+                <p className="text-base leading-relaxed">
+                    Click on a theme to explore what you've written about it 💭
+                </p>
+            </div>
+        </div>
+    )
     if (loading) return <div className="p-4 border border-neutral-300 rounded-md h-full overflow-y-auto shadow-sm">Loading...</div>
     if (!data) return <div className="p-4 border border-neutral-300 rounded-md h-full overflow-y-auto shadow-sm">No data available</div>
 

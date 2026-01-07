@@ -2,6 +2,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import prisma from '@/lib/prisma'
+import NextAuth from 'next-auth'
 
 //authoptions object - holds all nextauth configuration
 export const authOptions = {
@@ -72,3 +73,5 @@ export const authOptions = {
     },
 
 }
+
+export const { auth, signIn, signOut } = NextAuth(authOptions)
