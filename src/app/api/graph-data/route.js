@@ -1,9 +1,19 @@
 import prisma from "@/lib/prisma";
+import { auth } from '@/lib/auth'
 
 export async function GET() {
     try {
+        const session = await auth()
+        
+        if (!session?.user?.id) {
+            return Response.json({ error: "Unauthorized" }, { status: 401 })
+        }
+        
         const nodes = await prisma.node.findMany({
-            where: { count: {gt:1}}
+            where: { 
+                userId: session.user.id,
+                count: {gt:1}
+            }
         })
         const nodeIds = nodes.map(n => n.id)
         const edges = await prisma.edge.findMany({

@@ -1,14 +1,24 @@
 import prisma from "@/lib/prisma";
 import { generateNodeSummary } from "@/lib/identity/nodes/generateNodeSummary";
 import { openai } from "@/lib/openai";
+import { auth } from '@/lib/auth'
 
 export async function GET(request, { params }) {
     try {
+        const session = await auth()
+        
+        if (!session?.user?.id) {
+            return Response.json({ error: "Unauthorized" }, { status: 401 })
+        }
+        
         const { id } = await params
         
         // fetch node with related data
         const node = await prisma.node.findUnique({
-            where: { id }, 
+            where: { 
+                id,
+                userId: session.user.id
+            }, 
             include: {
                 topicAliases: {
                     select: {

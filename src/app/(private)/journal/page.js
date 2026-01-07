@@ -47,7 +47,7 @@ export default function JournalPage() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    userId: "demo-user",
+                    userId: session?.user?.id,
                     title, 
                     body,
                 }),

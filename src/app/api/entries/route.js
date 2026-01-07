@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { processEntry } from '@/lib/identity/pipeline/processEntry'
+import { auth } from '@/lib/auth'
 
 export const maxDuration = 60
 
@@ -37,7 +38,16 @@ export async function POST(request) {
 
 export async function GET() {
     try {
+        const session = await auth()
+        
+        if (!session?.user?.id) {
+            return Response.json({ error: "Unauthorized" }, { status: 401 })
+        }
+        
         const entries = await prisma.entry.findMany({
+            where: {
+                userId: session.user.id
+            },
             orderBy: {
                 createdAt: 'desc'
             }
