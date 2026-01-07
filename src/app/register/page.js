@@ -50,19 +50,6 @@ export default function RegisterPage(){
                         </div>
                     )}
                     <div className="mb-4">
-                        <label htmlFor="email" className="block mb-2">
-                            Email
-                        </label>
-                        <input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange = {(e) => setEmail(e.target.value)}
-                            required
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
                         <label htmlFor="name" className="block mb-2">
                             Name
                         </label>
@@ -75,6 +62,21 @@ export default function RegisterPage(){
                             className="w-full p-2 border rounded"
                         />
                     </div>
+                    
+                    <div className="mb-4">
+                        <label htmlFor="email" className="block mb-2">
+                            Email
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange = {(e) => setEmail(e.target.value)}
+                            required
+                            className="w-full p-2 border rounded"
+                        />
+                    </div>
+                    
                     <div className="mb-4">
                         <label htmlFor="Password" className="block mb-2">
                             Password

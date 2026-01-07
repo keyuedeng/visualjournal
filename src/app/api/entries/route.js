@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
 import { processEntry } from '@/lib/identity/pipeline/processEntry'
 
 export const maxDuration = 60

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma"
+import prisma from "@/lib/prisma"
 import { embedText } from "../embeddings/embedText"
 import { normaliseTopic } from "./normaliseTopic"
 

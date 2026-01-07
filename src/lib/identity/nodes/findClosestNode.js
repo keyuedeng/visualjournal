@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 //cosine similarity between two embedding vectors
 function cosineSimilarity(a,b) {

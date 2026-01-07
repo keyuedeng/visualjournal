@@ -1,5 +1,5 @@
 import { openai } from "@/lib/openai"
-import { prisma } from "@/lib/prisma"
+import prisma from "@/lib/prisma"
 
 export async function generateNodeSummary(node) {
     // Only generate summary if node appears 2+ times

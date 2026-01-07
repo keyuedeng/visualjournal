@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { generateNodeSummary } from "./generateNodeSummary";
 
 export async function updateNodeContext(nodeId, context) {

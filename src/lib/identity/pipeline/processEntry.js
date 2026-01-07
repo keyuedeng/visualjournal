@@ -2,7 +2,7 @@ import { semanticChunk } from "../chunking/chunking";
 import { extractInsight } from "../insights/extractInsight";
 import { canonicaliseTopicAlias } from "../canonicalisation/canonicaliseTopicAlias";
 import { createOrUpdateEdges } from "../graph/createOrUpdateEdges";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function processEntry(userId, entryId, entrybody) {
     console.log("Processing entry:", { userId, entryId, bodyLength: entrybody?.length })

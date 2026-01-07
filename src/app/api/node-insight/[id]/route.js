@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { generateNodeSummary } from "@/lib/identity/nodes/generateNodeSummary";
 import { openai } from "@/lib/openai";
 

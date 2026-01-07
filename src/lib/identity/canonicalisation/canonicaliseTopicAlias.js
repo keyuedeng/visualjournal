@@ -3,7 +3,7 @@ import { createNodeFromTopic } from "../nodes/createNodeFromTopic";
 import { findClosestNode } from "../nodes/findClosestNode";
 import { updateNodeContext } from "../nodes/updateNodeContext";
 import { updateNodeEmbedding } from "../nodes/updateNodeEmbedding";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { llmNodeSimilarityCheck } from "./llmNodeSimilarityCheck";
 import { classifyNodeCategories } from "../nodes/classifyNodeCategories";
 

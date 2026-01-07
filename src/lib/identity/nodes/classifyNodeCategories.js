@@ -1,5 +1,5 @@
 import { openai } from "@/lib/openai";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 // classifies a node into soft categories
 
