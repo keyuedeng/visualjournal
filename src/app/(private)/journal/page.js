@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react"
 import TextareaAutosize from "react-textarea-autosize"
 import { ArrowUpRight } from "lucide-react"
+import { useSession } from 'next-auth/react'
 import {
   Dialog,
   DialogContent,
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/dialog"
 
 export default function JournalPage() {
+    const { data: session } = useSession()
     const today = new Date()
     const options = {
         weekday: "long",
@@ -95,7 +97,7 @@ export default function JournalPage() {
     //render form + list
     return (
         <div className="p-6 pl-8">
-            <h1 className="mb-4 font-medium text-neutral-700">{greeting}</h1>
+            <h1 className="mb-4 font-medium text-neutral-700">{greeting}{session?.user?.name}</h1>
             <div className="border border-[#D9D9D9] rounded-xl p-4 mb-8 shadow-sm">
                 <h2 className="pb-3 text-neutral-600">Today · {formatted}</h2>
                 <form onSubmit={handleSubmit}>
