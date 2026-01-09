@@ -1,17 +1,17 @@
 import prisma from "@/lib/prisma";
-import { auth } from '@/lib/auth'
+import { auth } from '@clerk/nextjs/server'
 
 export async function GET() {
     try {
-        const session = await auth()
+        const { userId } = await auth()
         
-        if (!session?.user?.id) {
+        if (!userId) {
             return Response.json({ error: "Unauthorized" }, { status: 401 })
         }
         
         const nodes = await prisma.node.findMany({
             where: { 
-                userId: session.user.id,
+                userId,
                 count: {gt:1}
             }
         })

@@ -1,12 +1,18 @@
 import prisma from '@/lib/prisma'
 import { processEntry } from '@/lib/identity/pipeline/processEntry'
-import { auth } from '@/lib/auth'
+import { auth } from '@clerk/nextjs/server'
 
 export const maxDuration = 60
 
 export async function POST(request) {
     try {
-        const { userId, title, body }= await request.json() //await used in async function to pause the execution of the function until a promise settles
+        const { userId } = await auth()
+        
+        if (!userId) {
+            return Response.json({ error: "Unauthorized" }, { status: 401 })
+        }
+        
+        const { title, body } = await request.json()
         
         if (!body || body.trim().length === 0) {
             return Response.json(
@@ -14,6 +20,13 @@ export async function POST(request) {
                 { status: 400 }
             )
         }
+
+        // Ensure user exists in database
+        await prisma.user.upsert({
+            where: { id: userId },
+            update: {},
+            create: { id: userId }
+        })
 
         const savedEntry = await prisma.entry.create({
             data: { 
@@ -38,15 +51,15 @@ export async function POST(request) {
 
 export async function GET() {
     try {
-        const session = await auth()
+        const { userId } = await auth()
         
-        if (!session?.user?.id) {
+        if (!userId) {
             return Response.json({ error: "Unauthorized" }, { status: 401 })
         }
         
         const entries = await prisma.entry.findMany({
             where: {
-                userId: session.user.id
+                userId
             },
             orderBy: {
                 createdAt: 'desc'

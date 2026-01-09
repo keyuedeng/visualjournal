@@ -1,11 +1,12 @@
 "use client"
 import Link from "next/link"
 import { NotebookPen, Orbit } from "lucide-react"
-import { signOut, useSession } from 'next-auth/react'
+import { useUser, useClerk } from '@clerk/nextjs'
 import { useState, useEffect, useRef } from 'react'
 
 export default function Sidebar() {
-    const { data: session } = useSession()
+    const { user } = useUser()
+    const { signOut } = useClerk()
     const [showPopup, setShowPopup] = useState(false)
     const popupRef = useRef(null)
 
@@ -31,13 +32,13 @@ export default function Sidebar() {
                         onClick={() => setShowPopup(!showPopup)}
                         className="w-full text-left px-3 py-3 hover:bg-[#E9E9E9] rounded-md transition-colors font-semibold text-lg cursor-pointer"
                     >
-                        {session?.user?.name || 'User'}
+                        {user?.firstName || user?.emailAddresses[0]?.emailAddress || 'User'}
                     </button>
 
                     {showPopup && (
                         <div className="absolute top-full mt-2 right-0 bg-white border rounded-md shadow-lg p-2 z-10 pointer-events-none">
                             <button
-                                onClick={() => signOut({ callbackUrl: '/login' })}
+                                onClick={() => signOut()}
                                 className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-md pointer-events-auto"
                             >
                                 Logout

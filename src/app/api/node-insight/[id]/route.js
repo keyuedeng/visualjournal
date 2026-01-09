@@ -1,13 +1,13 @@
 import prisma from "@/lib/prisma";
 import { generateNodeSummary } from "@/lib/identity/nodes/generateNodeSummary";
 import { openai } from "@/lib/openai";
-import { auth } from '@/lib/auth'
+import { auth } from '@clerk/nextjs/server'
 
 export async function GET(request, { params }) {
     try {
-        const session = await auth()
+        const { userId } = await auth()
         
-        if (!session?.user?.id) {
+        if (!userId) {
             return Response.json({ error: "Unauthorized" }, { status: 401 })
         }
         
@@ -17,7 +17,7 @@ export async function GET(request, { params }) {
         const node = await prisma.node.findUnique({
             where: { 
                 id,
-                userId: session.user.id
+                userId
             }, 
             include: {
                 topicAliases: {
