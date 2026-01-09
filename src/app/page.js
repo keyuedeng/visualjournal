@@ -1,13 +1,47 @@
+"use client"
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import DemoGraph from '@/components/DemoGraph'
 
 export default function Home() {
+  const [displayedText, setDisplayedText] = useState('')
+  const [showCursor, setShowCursor] = useState(true)
+  const fullText = 'See what defines you'
+
+  useEffect(() => {
+    let currentIndex = 0
+    const typingInterval = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setDisplayedText(fullText.slice(0, currentIndex))
+        currentIndex++
+      } else {
+        clearInterval(typingInterval)
+        setShowCursor(false)
+      }
+    }, 60)
+
+    return () => clearInterval(typingInterval)
+  }, [])
+
+  useEffect(() => {
+    if (displayedText.length === fullText.length) return
+    
+    const cursorInterval = setInterval(() => {
+      setShowCursor((prev) => !prev)
+    }, 530)
+
+    return () => clearInterval(cursorInterval)
+  }, [displayedText])
+
   return (
     <div className="bg-gradient-to-br from-stone-100/50 via-slate-50/40 to-neutral-100/50 min-h-screen">
       <header className="py-8 px-8 text-2xl font-bold tracking-wide text-slate-700 font-serif">Moiré</header>
       <main className="flex items-center min-h-[calc(100vh-80px)] px-8 md:px-16 lg:px-24">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl flex-shrink-0">
           <h1 className="mb-6 text-5xl md:text-6xl lg:text-7xl font-light leading-tight text-slate-700 tracking-tight font-serif">
-            See what defines you<span className="text-blue-400/60">.</span>
+            {displayedText}
+            {showCursor && <span className="text-blue-400/40" style={{ fontWeight: 100 }}>|</span>}
+            {!showCursor && displayedText.length === fullText.length && <span className="text-blue-400/60">.</span>}
           </h1>
           <p className="mb-10 text-lg md:text-xl text-slate-600 leading-relaxed font-light max-w-xl">
             Turn your thoughts into insight. <span className="text-[#b88998] italic">Discover</span> recurring themes and intentions, and notice what shapes <span className="text-[#b88998] italic">you</span> over time.
@@ -26,6 +60,9 @@ export default function Home() {
               Sign In
             </Link>
           </div>
+        </div>
+        <div className="flex-1 h-[700px] ml-16 hidden lg:block -mt-30">
+          <DemoGraph />
         </div>
       </main>
     </div>
