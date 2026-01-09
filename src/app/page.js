@@ -34,9 +34,9 @@ export default function Home() {
   }, [displayedText])
 
   return (
-    <div className="bg-gradient-to-br from-stone-100/50 via-slate-50/40 to-neutral-100/50 min-h-screen">
+    <div className="bg-gradient-to-br from-stone-100/50 via-slate-50/40 to-neutral-100/50">
       <header className="py-8 px-8 text-2xl font-bold tracking-wide text-slate-700 font-serif">Moiré</header>
-      <main className="flex items-center min-h-[calc(100vh-80px)] px-8 md:px-16 lg:px-24">
+      <section id = "hero" className=" min-h-screen flex items-center min-h-[calc(100vh-80px)] px-8 md:px-16 lg:px-24">
         <div className="max-w-2xl flex-shrink-0">
           <h1 className="mb-6 text-5xl md:text-6xl lg:text-7xl font-light leading-tight text-slate-700 tracking-tight font-serif">
             {displayedText}
@@ -51,7 +51,7 @@ export default function Home() {
               href="/sign-up" 
               className="px-10 py-3.5 text-sm font-medium bg-slate-600 text-white rounded-full hover:bg-slate-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
             >
-              Get Started
+              Get Started →
             </Link>
             <Link 
               href="/sign-in" 
@@ -64,7 +64,35 @@ export default function Home() {
         <div className="flex-1 h-[700px] ml-16 hidden lg:block -mt-30">
           <DemoGraph />
         </div>
-      </main>
+      </section>
+      <section id="how it works" className="min-h-screen bg-white flex items-center justify-center px-8">
+        <div className="max-w-6xl w-full">
+          <h2 className="text-4xl md:text-5xl font-light text-center mb-16 text-slate-700 font-serif">
+            From writing to insight
+          </h2>
+          <div className="grid md:grid-cols-3 gap-12">
+            <div className="text-center">
+              <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">📝 Write freely</h3>
+              <p className="text-slate-600 leading-relaxed">Capture thoughts, reflections, and moments — no prompts, no pressure.</p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">💡 See connections emerge</h3>
+              <p className="text-slate-600 leading-relaxed">Recurring themes, intentions, and ideas surface naturally as you write.</p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">🌱 Understand yourself over time</h3>
+              <p className="text-slate-600 leading-relaxed">Recurring themes, intentions, and ideas surface naturally as you write.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="features" className="min-h-screen bg-gradient-to-br from-stone-100/50 via-slate-50/40 to-neutral-100/50 flex justify-center items-center">
+        <div>
+          <h2 className="text-4xl md:text-5xl font-light text-center mb-16 text-slate-700 font-serif">
+            What you'll notice
+          </h2>
+        </div>
+      </section>
     </div>
   )
 }
