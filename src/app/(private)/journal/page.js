@@ -24,6 +24,9 @@ export default function JournalPage() {
     const formatted = today.toLocaleDateString("en-US", options)
     const [entries, setEntries] = useState([])
     const [loading, setLoading] = useState(true)
+    const [placeholder, setPlaceholder] = useState("")
+    const [showCursor, setShowCursor] = useState(true)
+    const fullPlaceholder = "What's been on your mind?"
 
     //fetch entries when page loads
     useEffect(() => {
@@ -36,6 +39,30 @@ export default function JournalPage() {
 
         loadEntries() //runs the above function 
 
+    }, [])
+
+    //typing animation for placeholder
+    useEffect(() => {
+        let index = 0
+        const typingInterval = setInterval(() => {
+            if (index <= fullPlaceholder.length) {
+                setPlaceholder(fullPlaceholder.slice(0, index))
+                index++
+            } else {
+                clearInterval(typingInterval)
+            }
+        }, 60) // 50ms per character
+
+        return () => clearInterval(typingInterval)
+    }, [])
+
+    //blinking cursor effect
+    useEffect(() => {
+        const cursorInterval = setInterval(() => {
+            setShowCursor(prev => !prev)
+        }, 530)
+
+        return () => clearInterval(cursorInterval)
     }, [])
     //handle new entry submission
     const [title, setTitle] = useState("")
@@ -95,9 +122,9 @@ export default function JournalPage() {
 
     //render form + list
     return (
-        <div className="p-6 pl-8">
+        <div className="p-6 pl-8 bg-gradient-to-br from-stone-100/50 via-slate-50/40 to-neutral-100/50 min-h-screen">
             <h1 className="mb-4 font-medium text-neutral-700">{greeting}{user?.firstName || user?.emailAddresses[0]?.emailAddress?.split('@')[0]}</h1>
-            <div className="border border-[#D9D9D9] rounded-xl p-4 mb-8 shadow-sm">
+            <div className="border border-stone-200 rounded-xl p-4 mb-8 shadow-sm bg-white/80">
                 <h2 className="pb-3 text-neutral-600">Today · {formatted}</h2>
                 <form onSubmit={handleSubmit}>
                     <input
@@ -112,12 +139,12 @@ export default function JournalPage() {
                             }
                         }}
                         ref={titleInputRef}
-                        className="w-full text-4xl focus:outline-none pb-3 font-[family-name:var(--font-crimson)] placeholder:font-light"
+                        className="w-full text-4xl focus:outline-none pb-3 font-[family-name:var(--font-cormorant)] placeholder:font-semibold font-semibold text-neutral-700"
                     />
                     <TextareaAutosize
                         minRows={2}
                         maxRows={15}
-                        placeholder="What's been on your mind?"
+                        placeholder={placeholder + (showCursor && !body ? '|' : '')}
                         ref={bodyInputRef}
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
@@ -127,7 +154,7 @@ export default function JournalPage() {
                                 titleInputRef.current?.focus()
                             }
                         }}
-                        className="w-full focus:outline-none resize-none overflow-y-auto leading-relaxed text-neutral-700 text-lg placeholder:italic placeholder:text-xl placeholder:font-light placeholder:tracking-wide placeholder:font-[family-name:var(--font-crimson)]"
+                        className="w-full focus:outline-none resize-none overflow-y-auto leading-relaxed text-neutral-700 text-lg placeholder:italic placeholder:text-xl placeholder:font-medium placeholder:tracking-wide placeholder:font-[family-name:var(--font-cormorant)]"
                         style = {{ lineHeight: "1.6" }}
                     />
                     <button 
@@ -135,9 +162,9 @@ export default function JournalPage() {
                         disabled={!body.trim()}
                         className={`${
                             !body.trim()
-                            ? "bg-neutral-50 text-neutral-300"
-                            : "bg-neutral-100 hover:bg-neutral-200 cursor-pointer text-neutral-600"
-                        } self-end text-sm p-1 px-3 rounded-xl border border-neutral-300`}>
+                            ? "bg-stone-50 text-stone-300"
+                            : "bg-stone-100 hover:bg-stone-200 cursor-pointer text-neutral-600"
+                        } self-end text-sm p-1 px-3 rounded-xl border border-stone-300`}>
                         Save
                     </button>
                 </form>
@@ -154,7 +181,7 @@ export default function JournalPage() {
                             <li key={entry.id}>
                                 <Dialog>
                                     <DialogTrigger asChild>
-                                        <button className="w-full flex justify-between items-center border-t border-neutral-200 px-4 py-2 hover:bg-neutral-100 transition">
+                                        <button className="w-full flex justify-between items-center border-t border-stone-200 px-4 py-2 hover:bg-stone-100/50 transition">
                                             <div className="flex items-center gap-1 text-neutral-700">
                                                 <span>
                                                     {new Date(entry.createdAt).toLocaleDateString("en-US", {
@@ -173,12 +200,12 @@ export default function JournalPage() {
                                         </button>
                                     </DialogTrigger>
                                     <DialogContent className="!max-w-2xl !h-[85vh] overflow-y-auto">
-                                        <DialogHeader className="p-4">
-                                            <DialogTitle className="text-neutral-800">{entry.title}</DialogTitle>
-                                            <DialogDescription>
+                                        <DialogHeader className="p-6 space-y-4">
+                                            <DialogTitle className="text-3xl font-[family-name:var(--font-cormorant)] font-semibold text-neutral-800">{entry.title}</DialogTitle>
+                                            <DialogDescription className="text-sm text-neutral-500">
                                                 {new Date(entry.createdAt).toLocaleString()}
                                             </DialogDescription>
-                                            <div className = "whitespace-pre-wrap">
+                                            <div className="whitespace-pre-wrap text-neutral-700 leading-relaxed text-lg pt-2">
                                                 {entry.body}
                                             </div>
                                         </DialogHeader>

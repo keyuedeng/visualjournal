@@ -25,12 +25,12 @@ export default function Sidebar() {
     },[showPopup])
 
     return (
-        <aside className="w-55 bg-[#F5F5F5] border-r border-[#DBDBDB]">
+        <aside className="w-55 bg-stone-100/50 border-r border-stone-200">
             <div className="p-4">
                 <div className="relative" ref={popupRef}>
                     <button 
                         onClick={() => setShowPopup(!showPopup)}
-                        className="w-full text-left px-3 py-3 hover:bg-[#E9E9E9] rounded-md transition-colors font-semibold text-lg cursor-pointer"
+                        className="w-full text-left px-3 py-3 hover:bg-neutral-200/50 rounded-md transition-colors font-semibold text-lg cursor-pointer text-neutral-700"
                     >
                         {user?.firstName || user?.emailAddresses[0]?.emailAddress || 'User'}
                     </button>
@@ -48,11 +48,11 @@ export default function Sidebar() {
 
                 </div>
                 <nav className="flex flex-col space-y-2">
-                    <div className="flex items-center p-2 rounded-md hover:bg-[#E9E9E9] transition-colors text-neutral-700">
+                    <div className="flex items-center p-2 rounded-md hover:bg-neutral-200/50 transition-colors text-neutral-700">
                         <NotebookPen />
                         <Link href="/journal" className="ml-2 text-neutral-700">Journal</Link>
                     </div>
-                    <div className="flex items-center p-2 rounded-md hover:bg-[#E9E9E9] transition-colors text-neutral-700">
+                    <div className="flex items-center p-2 rounded-md hover:bg-neutral-200/50 transition-colors text-neutral-700">
                         <Orbit />
                         <Link href="/map" className="ml-2 text-neutral-700">My Fragments</Link>
                     </div>
