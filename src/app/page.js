@@ -104,11 +104,11 @@ export default function Home() {
             <div className="grid md:grid-cols-3 gap-12">
               <div className="text-center">
                 <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">Write freely</h3>
-                <p className="text-slate-600 leading-relaxed">Capture thoughts, reflections, and moments — no prompts, no pressure.</p>
+                <p className="text-slate-600 leading-relaxed">Capture unfiltered thoughts, reflections, and moments — no prompts, no pressure.</p>
               </div>
               <div className="text-center">
                 <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">See connections emerge</h3>
-                <p className="text-slate-600 leading-relaxed">Recurring themes, intentions, and ideas surface naturally as you write.</p>
+                <p className="text-slate-600 leading-relaxed">Recurring themes, intentions, and ideas surface naturally as your entries build.</p>
               </div>
               <div className="text-center">
                 <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">Understand yourself over time</h3>
@@ -153,18 +153,12 @@ export default function Home() {
           </div>
         </section>
       </motion.section>
-      <motion.section
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2 }}
-        viewport={{ once: true, amount: 0.3 }}
-      >
-        <section>
-          <div>
-            hello
-          </div>
-        </section>
-      </motion.section>
+      
+      <section className="py-16 px-8 text-center">
+        <p className="text-slate-500 text-lg font-light italic">
+          Nothing to tag. Nothing to organise. Just write
+        </p>
+      </section>
     </div>
   )
 }
