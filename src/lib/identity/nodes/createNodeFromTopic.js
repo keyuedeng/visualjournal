@@ -2,11 +2,11 @@ import prisma from "@/lib/prisma";
 
 /*
 creates canonical node using topicalias
-input: alias (topic as string, embedding as vector, userId)
+input: userId (string), alias (topic as string, embedding as vector)
 */
 
-export async function createNodeFromTopic(alias) {
-    const { userId, topic, embedding } = alias
+export async function createNodeFromTopic(userId, alias) {
+    const { topic, embedding } = alias
     const label = topic
     const newNode = await prisma.node.create({
         data: {

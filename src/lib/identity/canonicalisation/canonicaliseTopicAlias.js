@@ -32,6 +32,11 @@ export async function canonicaliseTopicAlias({
 
     // if alias has node, only update context and centroid
     if (alias.canonicalNodeId) {
+        await prisma.node.update({
+            where: { id: alias.canonicalNodeId },
+            data: { count: { increment: 1 } }
+        })
+        
         await updateNodeContext(alias.canonicalNodeId, {
             text: snippet,
             entryId,
@@ -48,7 +53,7 @@ export async function canonicaliseTopicAlias({
 
     // no nodes in db, create first node
     if (!closestNode) {
-        const newNode = await createNodeFromTopic(alias)
+        const newNode = await createNodeFromTopic(userId, alias)
 
         await prisma.topicAlias.update({
             where: { id: alias.id },
@@ -133,7 +138,7 @@ export async function canonicaliseTopicAlias({
     }
 
     // low similarity or decision == no
-    const newNode = await createNodeFromTopic(alias)
+    const newNode = await createNodeFromTopic(userId, alias)
 
     await prisma.topicAlias.update({
         where: {id: alias.id},

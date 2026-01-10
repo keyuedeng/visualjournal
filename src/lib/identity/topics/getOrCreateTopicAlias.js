@@ -13,7 +13,6 @@ export async function getOrCreateTopicAlias(userId, rawTopic) {
     // check if this normalised topic exists in schema already
     const existing = await prisma.topicAlias.findFirst({
         where: {
-            userId: userId, 
             topic: topic
         }
     })
@@ -24,7 +23,6 @@ export async function getOrCreateTopicAlias(userId, rawTopic) {
     const embedding = await embedText(topic)
     const alias = await prisma.topicAlias.create({
         data: {
-            userId,
             topic,
             embedding,
             canonicalNodeId: null // ASSIGN LATER DURING CANONICALISATION

@@ -30,7 +30,6 @@ export async function createOrUpdateEdges(userId, nodeIds, weightIncrement = 1) 
     //look up all exisitng edges
     const existingEdges = await prisma.edge.findMany({
         where: {
-            userId, 
             OR: pairs.map((p) => ({
                 sourceId: p.sourceId,
                 targetId: p.targetId,
@@ -63,7 +62,6 @@ export async function createOrUpdateEdges(userId, nodeIds, weightIncrement = 1) 
             creates.push(
                 prisma.edge.create({
                     data: {
-                        userId,
                         sourceId: pair.sourceId, 
                         targetId: pair.targetId,
                         weight: weightIncrement,

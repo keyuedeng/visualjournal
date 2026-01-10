@@ -12,6 +12,7 @@ export async function updateNodeContext(nodeId, context) {
     const node = await prisma.node.findUnique({
         where: {id: nodeId },
         select: { 
+            id: true,
             contexts: true,
             count: true,
             label: true,

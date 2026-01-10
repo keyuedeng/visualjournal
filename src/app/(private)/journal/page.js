@@ -67,29 +67,42 @@ export default function JournalPage() {
     //handle new entry submission
     const [title, setTitle] = useState("")
     const [body, setBody] = useState("")
+    const [saveStatus, setSaveStatus] = useState("") // "", "saving", "success", "error"
+    
     async function handleSubmit(e) {
         e.preventDefault() //stops page refresh
+        
+        //clear input immediately for better UX
+        const titleToSave = title
+        const bodyToSave = body
+        setTitle("")
+        setBody("")
+        setSaveStatus("saving")
+        
         try {
             const postRes = await fetch("/api/entries", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    title, 
-                    body,
+                    title: titleToSave, 
+                    body: bodyToSave,
                 }),
             })
 
             if (!postRes.ok) {
                 console.error('Failed to save entry', await postRes.text())
+                setSaveStatus("error")
+                setTimeout(() => setSaveStatus(""), 3000)
                 return
             }
-
-            //clear input
-            setTitle("")
-            setBody("")
+            
+            setSaveStatus("success")
+            setTimeout(() => setSaveStatus(""), 3000)
 
         } catch (err) {
             console.error('Error saving entry', err)
+            setSaveStatus("error")
+            setTimeout(() => setSaveStatus(""), 3000)
         }
 
         //reload entries
@@ -168,6 +181,19 @@ export default function JournalPage() {
                         Save
                     </button>
                 </form>
+                
+                {/* Status popup */}
+                {saveStatus && (
+                    <div className={`fixed bottom-8 right-8 px-6 py-3 rounded-lg shadow-lg transition-all ${
+                        saveStatus === "saving" ? "bg-blue-500 text-white" :
+                        saveStatus === "success" ? "bg-green-500 text-white" :
+                        "bg-red-500 text-white"
+                    }`}>
+                        {saveStatus === "saving" && "Entry added! Processing..."}
+                        {saveStatus === "success" && "Entry processed successfully!"}
+                        {saveStatus === "error" && "Failed to save entry"}
+                    </div>
+                )}
             </div>
             {loading ? (
                 <div>Loading entries...</div>

@@ -45,7 +45,12 @@ export async function POST(request) {
         }) 
     } catch (error) {
         console.error("Failed to process entry:", error)
-        return Response.json({ error: "Internal Server Error" }, { status: 500 })
+        console.error("Error stack:", error.stack)
+        console.error("Error message:", error.message)
+        return Response.json({ 
+            error: "Internal Server Error",
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        }, { status: 500 })
     }
 }
 
