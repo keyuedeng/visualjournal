@@ -45,7 +45,7 @@ export default function NodePanel({ nodeId }) {
 
     return (
         <div className="p-4 border border-neutral-300 rounded-md h-full overflow-y-auto shadow-sm"> 
-            <h2 className="text-xl font-semibold mb-1">{data.summary.label}</h2>
+            <h2 className="text-xl font-semibold mb-1 capitalize">{data.summary.label}</h2>
             <p className="text-sm text-neutral-500 mb-6">
                 Appears in {data.summary.count} {data.summary.count === 1 ? 'entry' : 'entries'}
             </p>
