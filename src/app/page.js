@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import DemoGraph from '@/components/DemoGraph'
+import { motion } from 'framer-motion'
 
 export default function Home() {
   const [displayedText, setDisplayedText] = useState('')
@@ -35,7 +36,31 @@ export default function Home() {
 
   return (
     <div className="bg-gradient-to-br from-stone-100/50 via-slate-50/40 to-neutral-100/50">
-      <header className="py-8 px-8 text-2xl font-bold tracking-wide text-slate-700 font-serif">Moiré</header>
+      <header className="fixed top-0 w-full z-50 py-6 px-8 bg-white/80 backdrop-blur-sm shadow-sm">
+        <nav className="flex justify-between items-center max-w-7xl mx-auto">
+          <div className="text-2xl font-bold tracking-wide text-slate-700 font-serif">
+            Moire
+          </div>
+          <div className="flex gap-8 items-center">
+            <a href="#hero" className="text-slate-600 hover:text-slate-900 transition">
+              Overview
+            </a>
+            <a href="#how-it-works" className="text-slate-600 hover:text-slate-900 transition">
+              Design
+            </a>
+            <a href="#features" className="text-slate-600 hover:text-slate-900 transition">
+              Clarity
+            </a>
+            <Link
+              href="/sign-in"
+              className="px-6 py-2 text-sm font-medium bg-slate-600 text-white rounded-full hover:bg-slate-700 transition"
+            >
+              Sign In
+            </Link>
+          </div>
+        </nav>
+      </header>
+    
       <section id = "hero" className=" min-h-screen flex items-center min-h-[calc(100vh-80px)] px-8 md:px-16 lg:px-24">
         <div className="max-w-2xl flex-shrink-0">
           <h1 className="mb-6 text-5xl md:text-6xl lg:text-7xl font-light leading-tight text-slate-700 tracking-tight font-serif">
@@ -61,38 +86,85 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div className="flex-1 h-[700px] ml-16 hidden lg:block -mt-30">
+        <div className="flex-1 h-[700px] ml-16 hidden lg:block mt-12">
           <DemoGraph />
         </div>
       </section>
-      <section id="how it works" className="min-h-screen bg-white flex items-center justify-center px-8">
-        <div className="max-w-6xl w-full">
-          <h2 className="text-4xl md:text-5xl font-light text-center mb-16 text-slate-700 font-serif">
-            From writing to insight
-          </h2>
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="text-center">
-              <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">📝 Write freely</h3>
-              <p className="text-slate-600 leading-relaxed">Capture thoughts, reflections, and moments — no prompts, no pressure.</p>
-            </div>
-            <div className="text-center">
-              <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">💡 See connections emerge</h3>
-              <p className="text-slate-600 leading-relaxed">Recurring themes, intentions, and ideas surface naturally as you write.</p>
-            </div>
-            <div className="text-center">
-              <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">🌱 Understand yourself over time</h3>
-              <p className="text-slate-600 leading-relaxed">Recurring themes, intentions, and ideas surface naturally as you write.</p>
+      <motion.section
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2 }}
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <section id="how-it-works" className="min-h-screen bg-white flex items-center justify-center px-8">
+          <div className="max-w-6xl w-full">
+            <h2 className="text-4xl md:text-5xl font-light text-center mb-16 text-slate-700 font-serif">
+              From writing to insight
+            </h2>
+            <div className="grid md:grid-cols-3 gap-12">
+              <div className="text-center">
+                <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">Write freely</h3>
+                <p className="text-slate-600 leading-relaxed">Capture thoughts, reflections, and moments — no prompts, no pressure.</p>
+              </div>
+              <div className="text-center">
+                <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">See connections emerge</h3>
+                <p className="text-slate-600 leading-relaxed">Recurring themes, intentions, and ideas surface naturally as you write.</p>
+              </div>
+              <div className="text-center">
+                <h3 className="text-xl font-light mb-4 text-slate-700 font-medium">Understand yourself over time</h3>
+                <p className="text-slate-600 leading-relaxed">Patterns grow clearer, helping you see what consistently matters to you.</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-      <section id="features" className="min-h-screen bg-gradient-to-br from-stone-100/50 via-slate-50/40 to-neutral-100/50 flex justify-center items-center">
-        <div>
-          <h2 className="text-4xl md:text-5xl font-light text-center mb-16 text-slate-700 font-serif">
-            What you'll notice
-          </h2>
-        </div>
-      </section>
+        </section>
+      </motion.section>
+      <motion.section
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2 }}
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <section id="features" className="min-h-screen bg-gradient-to-br from-stone-100/50 via-slate-50/40 to-neutral-100/50 flex justify-center items-center px-8 md:px-16">
+          <div className="flex flex-row gap-20 max-w-5xl w-full items-start">
+            <div className="flex-1">
+                <h2 className="text-4xl md:text-5xl font-light mb-6 text-slate-700 font-serif">
+                  What you'll notice
+                </h2>
+                <p className="text-lg text-slate-600 leading-relaxed">Over time, your writing forms a clearer picture — without needing to force meaning out of every entry.</p>
+            </div>
+            <ul className="flex-1 list-disc pl-5 space-y-6">
+              <li>
+                <h3 className="text-xl font-light mb-2 text-slate-700 font-medium">Recurring themes</h3>
+                <p className="text-slate-600 leading-relaxed">Patterns that surface naturally as you write.</p>
+              </li>
+              <li>
+                <h3 className="text-xl font-light mb-2 text-slate-700 font-medium">Lasting intentions</h3>
+                <p className="text-slate-600 leading-relaxed">Ideas and goals that stay with you.</p>
+              </li>
+              <li>
+                <h3 className="text-xl font-light mb-2 text-slate-700 font-medium">Unexpected connections</h3>
+                <p className="text-slate-600 leading-relaxed">Links between thoughts that once felt unrelated.</p>
+              </li>
+              <li>
+                <h3 className="text-xl font-light mb-2 text-slate-700 font-medium">Change over time</h3>
+                <p className="text-slate-600 leading-relaxed">A quiet record of growth and shift.</p>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </motion.section>
+      <motion.section
+        initial={{ opacity: 0, y: 80 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2 }}
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <section>
+          <div>
+            hello
+          </div>
+        </section>
+      </motion.section>
     </div>
   )
 }
